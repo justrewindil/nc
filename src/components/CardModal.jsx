@@ -1,9 +1,9 @@
 import { useNavigate } from 'react-router-dom';
 import { X, Play, Info, User } from 'lucide-react';
-import { IMG } from '../lib/tmdb';
 import { RARITIES } from '../lib/cards';
 import { useStore } from '../context/StoreContext';
 import { useLanguage } from '../context/LanguageContext';
+import CardArt from './CardArt';
 
 export default function CardModal() {
   const { cardView, closeCardView, openPlayer } = useStore();
@@ -15,7 +15,7 @@ export default function CardModal() {
   const r = RARITIES[c.rarity] || RARITIES.common;
   const isMoment = c.kind === 'moment';
   const type = c.mediaType || (c.season ? 'tv' : 'movie');
-  const img = c.profile ? `${IMG}/${isMoment ? 'w780' : 'w342'}${c.profile}` : '';
+  const wide = isMoment || (c.kind === 'role' && c.scene);
 
   const watch = () => {
     if (isMoment && type === 'tv' && c.season) openPlayer(c.mediaId, 'tv', { season: c.season, episode: c.episode });
@@ -29,8 +29,8 @@ export default function CardModal() {
     <div className="cardview-overlay" onClick={(e) => { if (e.target.classList.contains('cardview-overlay')) closeCardView(); }}>
       <div className="cardview-box" style={{ '--rc': r.color }}>
         <button className="close-btn" onClick={closeCardView}><X size={16} /></button>
-        <div className={`cardview-img ${isMoment ? 'wide' : 'tall'}`}>
-          {img ? <img src={img} alt={c.name} /> : <div className="gcard-noimg" style={{ '--rc': r.color }}>{(c.name || '?')[0]}</div>}
+        <div className={`cardview-img ${wide ? 'wide' : 'tall'}`}>
+          <CardArt card={c} size="w780" />
           <span className="gcard-rarity">{r.label}</span>
           {isMoment && <span className="gcard-moment">🎬 {t('moment')}</span>}
         </div>

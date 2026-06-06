@@ -1,8 +1,8 @@
 import { X, Sparkles } from 'lucide-react';
-import { IMG } from '../lib/tmdb';
 import { RARITIES } from '../lib/cards';
 import { useStore } from '../context/StoreContext';
 import { useLanguage } from '../context/LanguageContext';
+import CardArt from './CardArt';
 
 export default function PackModal() {
   const { packResult, closePack } = useStore();
@@ -21,9 +21,7 @@ export default function PackModal() {
             return (
               <div key={`${c.key}-${i}`} className={`gcard r-${c.rarity}`} style={{ '--rc': r.color, animationDelay: `${i * 0.12}s` }}>
                 <div className="gcard-img">
-                  {c.profile
-                    ? <img src={`${IMG}/w342${c.profile}`} alt={c.name} />
-                    : <div className="gcard-noimg">{(c.name || '?')[0]}</div>}
+                  <CardArt card={c} />
                   <span className="gcard-rarity">{r.label}</span>
                   {c.kind === 'moment' && <span className="gcard-moment">🎬 {t('moment')}</span>}
                   {c.isNew ? <span className="gcard-new">NEW</span> : <span className="gcard-dupe">+{r.shard}🪙</span>}

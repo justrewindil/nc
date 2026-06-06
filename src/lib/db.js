@@ -107,7 +107,8 @@ export async function fetchCards(uid) {
   return data.map((r) => ({
     key: r.card_id, kind: r.kind || 'role', actorId: r.actor_id, name: r.name, character: r.character || '',
     profile: r.profile || '', rarity: r.rarity, mediaId: r.media_id, mediaTitle: r.media_title || '',
-    mediaType: r.media_type || '', season: r.season || null, episode: r.episode || null, count: r.count || 1,
+    mediaType: r.media_type || '', season: r.season || null, episode: r.episode || null,
+    scene: r.scene || '', count: r.count || 1,
   }));
 }
 export async function upsertCard(uid, c) {
@@ -115,7 +116,8 @@ export async function upsertCard(uid, c) {
   await supabase.from('cards').upsert({
     user_id: uid, card_id: c.key, kind: c.kind || 'role', actor_id: c.actorId, name: c.name, character: c.character || '',
     profile: c.profile || '', rarity: c.rarity, media_id: c.mediaId, media_title: c.mediaTitle || '',
-    media_type: c.mediaType || null, season: c.season || null, episode: c.episode || null, count: c.count,
+    media_type: c.mediaType || null, season: c.season || null, episode: c.episode || null,
+    scene: c.scene || null, count: c.count,
   }, { onConflict: 'user_id,card_id' });
 }
 

@@ -170,11 +170,13 @@ export function StoreProvider({ children }) {
     setPackBusy(true);
     try {
       const mid = Number(id);
+      let scene = ''; // a representative backdrop from the title, used behind role cards
       // ── moment cards (scene / episode stills) ──
       let moments = [];
       try {
         if (type === 'tv') {
           const det = await tmdb(`/tv/${id}`);
+          scene = det.backdrop_path || '';
           const seasons = (det.seasons || []).filter((s) => s.season_number > 0 && s.episode_count > 0);
           if (seasons.length) {
             const season = seasons[Math.floor(Math.random() * seasons.length)];
@@ -192,6 +194,7 @@ export function StoreProvider({ children }) {
           const imgs = await tmdb(`/movie/${id}/images`);
           let backs = (imgs.backdrops || []).filter((b) => b.file_path).slice(0, 15);
           backs.sort((a, b) => (b.vote_average || 0) - (a.vote_average || 0));
+          scene = backs[0]?.file_path || '';
           const ranked = backs.map((b, i) => ({ b, rarity: rarityByRank(i) }));
           moments = shuffle(ranked).slice(0, 2).map(({ b, rarity }) => ({
             key: `m-${mid}-${(b.file_path || '').replace(/[^a-z0-9]/gi, '').slice(0, 14)}`, kind: 'moment', actorId: 0,
@@ -202,7 +205,7 @@ export function StoreProvider({ children }) {
       } catch {}
       // ── role cards (fill the rest of the pack) ──
       const credits = await tmdb(`/${type}/${id}/credits`);
-      const roles = buildPack(credits.cast || [], mid, titleName, type).slice(0, PACK_SIZE - moments.length);
+      const roles = buildPack(credits.cast || [], mid, titleName, type, scene).slice(0, PACK_SIZE - moments.length);
       const pulled = shuffle([...roles, ...moments]);
       if (!pulled.length) { toast('No cards available for this title', 'err'); setPackBusy(false); return; }
       let refund = 0;
