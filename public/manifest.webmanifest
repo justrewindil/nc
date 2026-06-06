@@ -1,0 +1,13 @@
+{
+  "name": "JustFilmzz",
+  "short_name": "JustFilmzz",
+  "description": "Movies & TV shows — watch anything.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#080506",
+  "theme_color": "#e50914",
+  "icons": [
+    { "src": "/logo.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/logo.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}

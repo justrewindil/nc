@@ -4,10 +4,12 @@ import { useStore } from '../context/StoreContext';
 import { useLanguage } from '../context/LanguageContext';
 
 export default function Card({ item }) {
-  const { openDetail, openPlayer, toggleWatchlist, isSaved } = useStore();
+  const { openDetail, openPlayer, toggleWatchlist, isSaved, getCw } = useStore();
   const { t } = useLanguage();
   const id = item.id;
   const type = typeOf(item);
+  const cw = getCw(id, type);
+  const pct = cw && cw.progress ? Math.min(100, Math.max(0, cw.progress)) : 0;
   const title = titleOf(item);
   const yr = yearOf(item);
   const rt = item.vote_average ? item.vote_average.toFixed(1) : '?';
@@ -43,6 +45,7 @@ export default function Card({ item }) {
           </button>
         </div>
         {rt !== '?' && <span className="card-pill"><span className="star">★</span> {rt}</span>}
+        {pct > 0 && <div className="card-prog"><span style={{ width: `${pct}%` }} /></div>}
       </div>
       <div className="card-info">
         <div className="card-title" title={title}>{title}</div>

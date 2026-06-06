@@ -62,6 +62,7 @@ export default function Login() {
           {busy ? <><span className="auth-mini-spin" /> {t('signingIn')}</> : t('signIn')}
         </button>
 
+        <p className="auth-switch" style={{ marginTop: 14 }}><Link to="/forgot">{t('forgotPassword')}</Link></p>
         <p className="auth-switch">{t('noAccount')} <Link to="/signup">{t('signupLink')}</Link></p>
       </form>
     </div>

@@ -21,7 +21,9 @@ export default function Player() {
 
   // refs for the postMessage handler (avoid stale closures)
   const ref = useRef({});
-  ref.current = { player, season, ep };
+  const actionsRef = useRef({});
+  const loadedRef = useRef(false);   // did the current iframe fire onLoad?
+  const attemptsRef = useRef(0);     // auto-fallback attempts for current title
 
   const isTV = player && !player.trailerKey && player.type === 'tv';
 
@@ -38,6 +40,8 @@ export default function Player() {
     document.body.style.overflow = 'hidden';
     setLoaderHidden(false);
     setPanelOpen(false);
+    attemptsRef.current = 0;
+    loadedRef.current = false;
 
     if (player.trailerKey) {
       setIsTrailer(true);
@@ -103,11 +107,32 @@ export default function Player() {
   };
   const prevEp = () => { if (ep > 1) pickEp(ep - 1); };
   const nextEp = () => { if (ep < episodes.length) pickEp(ep + 1); };
-  const switchSrc = (i) => {
+  const switchSrc = (i, auto = false) => {
+    if (!auto) attemptsRef.current = 0; // manual switch resets the auto-fallback budget
     setSource(i);
     setLoaderHidden(false);
+    loadedRef.current = false;
     setSrc(SOURCES[i].url(player.id, player.type, season, ep, 0));
   };
+
+  // keep latest values/actions available to listeners + timers
+  ref.current = { player, season, ep, episodes, source };
+  actionsRef.current = { pickEp, switchSrc };
+
+  // ── auto server-fallback: if the iframe never loads, try the next server ──
+  useEffect(() => {
+    if (!src || isTrailer) return;
+    loadedRef.current = false;
+    const timer = setTimeout(() => {
+      if (loadedRef.current) return;                 // it loaded fine
+      if (attemptsRef.current >= SOURCES.length - 1) return; // tried them all
+      attemptsRef.current += 1;
+      const next = (ref.current.source + 1) % SOURCES.length;
+      switchSrc(next, true);
+    }, 13000);
+    return () => clearTimeout(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [src, isTrailer]);
 
   // ── progress tracking (VidKing postMessage) ──
   useEffect(() => {
@@ -125,10 +150,26 @@ export default function Player() {
       if (pl.type === 'tv') { patch.season = s; patch.episode = e; }
       const finished = p.event === 'ended' || (patch.progress && patch.progress >= 95);
       updateCw(pl.id, pl.type, patch, finished);
+      // auto-play next episode when one ends
+      if (p.event === 'ended' && pl.type === 'tv') {
+        const eps = ref.current.episodes || [];
+        if (e < eps.length) actionsRef.current.pickEp?.(e + 1);
+      }
     };
     window.addEventListener('message', onMsg);
     return () => window.removeEventListener('message', onMsg);
   }, [updateCw]);
+
+  // Esc closes the player / episode panel
+  useEffect(() => {
+    if (!player) return;
+    const onKey = (e) => {
+      if (e.key !== 'Escape') return;
+      if (panelOpen) setPanelOpen(false); else closePlayer();
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [player, panelOpen, closePlayer]);
 
   if (!player) return <div id="playerOverlay" />;
   const curEp = episodes.find((x) => x.episode_number === ep);
@@ -156,7 +197,7 @@ export default function Player() {
           src={src}
           allowFullScreen
           allow="autoplay;encrypted-media;fullscreen;picture-in-picture"
-          onLoad={() => { if (src && src !== 'about:blank') setLoaderHidden(true); }}
+          onLoad={() => { if (src && src !== 'about:blank') { loadedRef.current = true; setLoaderHidden(true); } }}
         />
         {isTV && (
           <div id="epPanel" className={panelOpen ? 'on' : ''}>

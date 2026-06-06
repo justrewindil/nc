@@ -16,6 +16,20 @@ export default function Home() {
   const { t, lang } = useLanguage();
   const [data, setData] = useState(null);
   const [genres, setGenres] = useState([]);
+  const [recs, setRecs] = useState(null); // {title, items}
+
+  // "Because you watched …" — recommendations from the latest watched title
+  const seed = continueWatching[0];
+  useEffect(() => {
+    if (!seed) { setRecs(null); return; }
+    let alive = true;
+    tmdb(`/${seed.type}/${seed.id}/recommendations`).then((d) => {
+      if (!alive) return;
+      const items = (d.results || []).filter((r) => r.poster_path).slice(0, 16).map((r) => ({ ...r, media_type: seed.type }));
+      setRecs(items.length ? { title: `${t('becauseYouWatched')} ${seed.title}`, items } : null);
+    }).catch(() => {});
+    return () => { alive = false; };
+  }, [seed?.id, seed?.type, lang]); // eslint-disable-line
 
   useEffect(() => {
     let alive = true;
@@ -60,6 +74,7 @@ export default function Home() {
         {continueWatching.length > 0 && (
           <Row title={t('continueWatching')} items={continueWatching} renderItem={(it) => <CwCard key={`${it.id}-${it.type}`} item={it} />} />
         )}
+        {recs && <Row title={recs.title} items={recs.items} />}
         <Row title={t('trending')} items={trend.results.slice(0, 16)} />
         <Top10Row title={t('top10')} items={trend.results} />
         <Row title={t('popularMovies')} items={popM.results.slice(0, 16).map((i) => ({ ...i, media_type: 'movie' }))} seeAll={() => navigate('/movies')} />

@@ -53,7 +53,18 @@ export default function Nav() {
 
   const goFull = () => { navigate(`/search?q=${encodeURIComponent(q)}`); setOpen(false); };
   const isOn = (path) => location.pathname === path;
-  const tabs = [['/', t('home')], ['/movies', t('movies')], ['/tv', t('tv')], ['/watchlist', t('watchlist')]];
+  const tabs = [['/', t('home')], ['/movies', t('movies')], ['/tv', t('tv')], ['/watchlist', t('watchlist')], ['/favorites', t('favorites')]];
+
+  // keyboard shortcut: "/" focuses search
+  useEffect(() => {
+    const onKey = (e) => {
+      if (e.key === '/' && !/INPUT|TEXTAREA|SELECT/.test(document.activeElement?.tagName)) {
+        e.preventDefault(); inputRef.current?.focus();
+      }
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, []);
 
   return (
     <nav id="nav" className={scrolled ? 'scrolled' : ''}>
@@ -105,7 +116,7 @@ export default function Nav() {
       </div>
       <div className="nav-user">
         <button className="lang-toggle" onClick={toggle} title="Language">{lang === 'he' ? 'EN' : 'עב'}</button>
-        <div className="nav-avatar" title={user?.email}>{(user?.email || '?')[0]}</div>
+        <div className="nav-avatar" title={t('profile')} style={{ cursor: 'pointer' }} onClick={() => navigate('/profile')}>{(user?.email || '?')[0]}</div>
         <button className="nav-logout" onClick={signOut}><LogOut size={14} /><span>{t('logout')}</span></button>
       </div>
     </nav>

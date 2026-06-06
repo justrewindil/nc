@@ -34,13 +34,21 @@ export function AuthProvider({ children }) {
     });
   };
   const signOut = async () => { if (isSupabaseReady) await supabase.auth.signOut(); };
+  const sendPasswordReset = async (email) => {
+    if (!isSupabaseReady) return { error: { message: 'Supabase not configured (.env)' } };
+    return supabase.auth.resetPasswordForEmail(email, { redirectTo: window.location.origin + window.location.pathname + '#/reset' });
+  };
+  const updatePassword = async (password) => {
+    if (!isSupabaseReady) return { error: { message: 'Supabase not configured (.env)' } };
+    return supabase.auth.updateUser({ password });
+  };
 
   const value = {
     session,
     user: session?.user || null,
     loading,
     ready: isSupabaseReady,
-    signUp, signIn, signInWithGoogle, signOut,
+    signUp, signIn, signInWithGoogle, signOut, sendPasswordReset, updatePassword,
   };
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
