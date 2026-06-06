@@ -8,6 +8,7 @@ import Nav from './components/Nav';
 import MobileNav from './components/MobileNav';
 import Player from './components/Player';
 import PackModal from './components/PackModal';
+import PackOddsModal from './components/PackOddsModal';
 import CardModal from './components/CardModal';
 import Toasts from './components/Toasts';
 import BackToTop from './components/BackToTop';
@@ -56,6 +57,7 @@ function AppShell() {
       <MobileNav />
       <Player />
       <PackModal />
+      <PackOddsModal />
       <CardModal />
       <Toasts />
       <BackToTop />

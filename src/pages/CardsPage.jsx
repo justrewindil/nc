@@ -7,7 +7,7 @@ import { useLanguage } from '../context/LanguageContext';
 import CardArt from '../components/CardArt';
 
 export default function CardsPage() {
-  const { coins, cards, ownedCount, openPack, packBusy, openCardView } = useStore();
+  const { coins, cards, ownedCount, openOdds, packBusy, openCardView } = useStore();
   const { t, lang } = useLanguage();
   const [titles, setTitles] = useState([]);
   const [filter, setFilter] = useState('');
@@ -95,7 +95,7 @@ export default function CardsPage() {
                 <div className="pack-pick-info">
                   <div className="pack-pick-title">{titleOf(it)}</div>
                   <button className="btn-accent pack-open-btn" disabled={packBusy || coins < PACK_COST}
-                    onClick={() => openPack(it.id, type, titleOf(it))}>
+                    onClick={() => openOdds(it.id, type, titleOf(it))}>
                     <Package size={14} /> {PACK_COST} 🪙
                   </button>
                 </div>

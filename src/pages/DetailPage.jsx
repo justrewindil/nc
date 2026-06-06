@@ -10,7 +10,7 @@ import Comments from '../components/Comments';
 export default function DetailPage() {
   const { type, id } = useParams();
   const navigate = useNavigate();
-  const { openPlayer, openTrailer, toggleWatchlist, isSaved, toggleFavorite, isFavorite, getRating, setRating, openPack, packBusy } = useStore();
+  const { openPlayer, openTrailer, toggleWatchlist, isSaved, toggleFavorite, isFavorite, getRating, setRating, openOdds, packBusy } = useStore();
   const { t, lang } = useLanguage();
   const [d, setD] = useState(null);
   const [hoverRate, setHoverRate] = useState(0);
@@ -64,7 +64,7 @@ export default function DetailPage() {
             {trailer && <button className="btn-info" onClick={() => openTrailer(trailer.key)}><Video size={16} /> {t('trailer')}</button>}
             <button className={`dp-icon-btn${saved ? ' on' : ''}`} title={t('watchlistBtn')} onClick={() => toggleWatchlist(item)}>{saved ? <Check size={18} /> : <Plus size={18} />}</button>
             <button className={`dp-icon-btn${fav ? ' on-fav' : ''}`} title={t('favorite')} onClick={() => toggleFavorite(item)}><Heart size={18} fill={fav ? 'currentColor' : 'none'} /></button>
-            <button className="btn-info" disabled={packBusy} onClick={() => openPack(id, type, title)}><Package size={16} /> {t('openPack')} · 100🪙</button>
+            <button className="btn-info" disabled={packBusy} onClick={() => openOdds(id, type, title)}><Package size={16} /> {t('openPack')} · 100🪙</button>
           </div>
         </div>
       </div>

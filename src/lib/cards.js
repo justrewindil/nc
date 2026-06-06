@@ -39,6 +39,20 @@ export function shuffle(a) {
   return x;
 }
 
+// compute the rarity odds for a title's card pool (the cast buildPack draws from)
+export function poolOdds(cast) {
+  const pool = (cast || []).filter((c) => c.id && c.name).slice(0, 20);
+  const counts = { legendary: 0, epic: 0, rare: 0, common: 0 };
+  pool.forEach((c) => { counts[rarityFor(c.popularity, c.order)]++; });
+  const total = pool.length || 1;
+  const rows = RARITY_ORDER.map((r) => ({ rarity: r, count: counts[r], pct: Math.round((counts[r] / total) * 100) }));
+  const examples = {};
+  RARITY_ORDER.forEach((r) => {
+    examples[r] = pool.filter((c) => rarityFor(c.popularity, c.order) === r).slice(0, 3).map((c) => c.name);
+  });
+  return { rows, total, examples };
+}
+
 // build a pack: 5 distinct actors from a title, each as a role card tied to that title
 export function buildPack(cast, mediaId, mediaTitle, mediaType = 'movie', scene = '', size = PACK_SIZE) {
   const pool = (cast || []).filter((c) => c.id && c.name).slice(0, 20);

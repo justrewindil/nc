@@ -31,6 +31,7 @@ export function StoreProvider({ children }) {
   const [packResult, setPackResult] = useState(null);
   const [packBusy, setPackBusy] = useState(false);
   const [cardView, setCardView] = useState(null); // a card being inspected
+  const [oddsView, setOddsView] = useState(null); // {id,type,title} pack-odds preview
   const secAccum = useRef(0);
 
   // ── load per-user data (Supabase if available, else localStorage) ──
@@ -240,6 +241,8 @@ export function StoreProvider({ children }) {
   const closePlayer = useCallback(() => setPlayer(null), []);
   const openCardView = useCallback((c) => setCardView(c), []);
   const closeCardView = useCallback(() => setCardView(null), []);
+  const openOdds = useCallback((id, type, title) => setOddsView({ id: Number(id), type, title }), []);
+  const closeOdds = useCallback(() => setOddsView(null), []);
 
   const value = {
     watchlist, isSaved, toggleWatchlist,
@@ -251,6 +254,7 @@ export function StoreProvider({ children }) {
     coins: wallet.coins, cards, ownedCount, addWatchTime,
     openPack, packResult, closePack, packBusy,
     cardView, openCardView, closeCardView,
+    oddsView, openOdds, closeOdds,
   };
   return <StoreContext.Provider value={value}>{children}</StoreContext.Provider>;
 }
