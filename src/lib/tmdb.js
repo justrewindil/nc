@@ -57,14 +57,18 @@ export const SOURCES = [
         return `https://www.vidking.net/embed/tv/${id}/${s}/${e}?${p}`; }
       return `https://www.vidking.net/embed/movie/${id}?${p}`;
     } },
-  { name: 'Server 2', url: (id, t, s, e) => t === 'tv'
-      ? `https://vidsrc.to/embed/tv/${id}/${s}/${e}` : `https://vidsrc.to/embed/movie/${id}` },
-  { name: 'Server 3', url: (id, t, s, e) => t === 'tv'
-      ? `https://vidsrc.me/embed/tv?tmdb=${id}&season=${s}&episode=${e}` : `https://vidsrc.me/embed/movie?tmdb=${id}` },
-  { name: 'Server 4', url: (id, t, s, e) => t === 'tv'
+  { name: 'VidSrc', url: (id, t, s, e) => t === 'tv'
+      ? `https://vidsrc.cc/v2/embed/tv/${id}/${s}/${e}` : `https://vidsrc.cc/v2/embed/movie/${id}` },
+  { name: 'VidLink', url: (id, t, s, e) => t === 'tv'
       ? `https://vidlink.pro/tv/${id}/${s}/${e}` : `https://vidlink.pro/movie/${id}` },
-  { name: 'Server 5', url: (id, t, s, e) => t === 'tv'
+  { name: 'Embed.su', url: (id, t, s, e) => t === 'tv'
       ? `https://embed.su/embed/tv/${id}/${s}/${e}` : `https://embed.su/embed/movie/${id}` },
+  { name: 'AutoEmbed', url: (id, t, s, e) => t === 'tv'
+      ? `https://player.autoembed.cc/embed/tv/${id}/${s}/${e}` : `https://player.autoembed.cc/embed/movie/${id}` },
+  { name: 'VidSrc.to', url: (id, t, s, e) => t === 'tv'
+      ? `https://vidsrc.to/embed/tv/${id}/${s}/${e}` : `https://vidsrc.to/embed/movie/${id}` },
+  { name: '2Embed', url: (id, t, s, e) => t === 'tv'
+      ? `https://www.2embed.cc/embedtv/${id}&s=${s}&e=${e}` : `https://www.2embed.cc/embed/${id}` },
 ];
 
 // ── helpers ──
