@@ -51,14 +51,14 @@ function vkParams(resume = 0) {
   return p;
 }
 export const SOURCES = [
+  { name: 'VidSrc', url: (id, t, s, e) => t === 'tv'
+      ? `https://vidsrc.cc/v2/embed/tv/${id}/${s}/${e}` : `https://vidsrc.cc/v2/embed/movie/${id}` },
   { name: 'VidKing', url: (id, t, s, e, resume = 0) => {
       const p = vkParams(resume);
       if (t === 'tv') { p.set('nextEpisode', 'true'); p.set('episodeSelector', 'true');
         return `https://www.vidking.net/embed/tv/${id}/${s}/${e}?${p}`; }
       return `https://www.vidking.net/embed/movie/${id}?${p}`;
     } },
-  { name: 'VidSrc', url: (id, t, s, e) => t === 'tv'
-      ? `https://vidsrc.cc/v2/embed/tv/${id}/${s}/${e}` : `https://vidsrc.cc/v2/embed/movie/${id}` },
   { name: 'VidLink', url: (id, t, s, e) => t === 'tv'
       ? `https://vidlink.pro/tv/${id}/${s}/${e}` : `https://vidlink.pro/movie/${id}` },
   { name: 'Embed.su', url: (id, t, s, e) => t === 'tv'
