@@ -824,7 +824,9 @@ main{padding-top:var(--nav-h);min-height:100vh}
 
 /* ── PACK ODDS MODAL ── */
 .odds-overlay{position:fixed;inset:0;z-index:2100;background:rgba(0,0,0,.82);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);display:flex;align-items:center;justify-content:center;padding:20px;animation:tin .25s ease}
-.odds-box{position:relative;background:var(--glass-strong);border:1px solid var(--glass-border);border-radius:18px;padding:26px 28px;max-width:460px;width:100%;box-shadow:0 40px 90px rgba(0,0,0,.85)}
+.odds-box{position:relative;background:var(--glass-strong);border:1px solid var(--glass-border);border-radius:18px;padding:26px 28px;max-width:640px;width:100%;max-height:90vh;overflow-y:auto;box-shadow:0 40px 90px rgba(0,0,0,.85)}
+.odds-box::-webkit-scrollbar{width:8px}
+.odds-box::-webkit-scrollbar-thumb{background:rgba(229,9,20,.4);border-radius:4px}
 .odds-head{display:flex;align-items:center;gap:8px;font-family:var(--font-display);font-size:20px;font-weight:800;color:var(--accent)}
 .odds-title{font-size:15px;font-weight:700;margin-top:8px}
 .odds-hint{font-size:12.5px;color:var(--muted);margin:6px 0 18px;line-height:1.5}
@@ -835,7 +837,13 @@ main{padding-top:var(--nav-h);min-height:100vh}
 .odds-bar{height:8px;border-radius:5px;background:var(--surface3);overflow:hidden}
 .odds-bar span{display:block;height:100%;background:var(--rc);border-radius:5px;transition:width .5s cubic-bezier(.2,.7,.3,1)}
 .odds-eg{font-size:11px;color:var(--muted2);margin-top:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.odds-open{width:100%;justify-content:center}
+.odds-pool-label{font-size:13px;font-weight:700;color:var(--muted);margin:4px 0 12px}
+.odds-pool{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:10px;margin-bottom:22px}
+.odds-pool .gcard-char{font-size:11px}
+.odds-pool .gcard-actor{font-size:10px}
+.odds-pool .gcard-name{padding:7px 8px}
+.odds-pool .gcard-rarity{font-size:8px;padding:2px 6px;top:6px;left:6px}
+.odds-open{width:100%;justify-content:center;position:sticky;bottom:0}
 .odds-warn{text-align:center;color:#ff6b6b;font-size:13px;margin-top:10px}
 
 /* ── PACK OPEN MODAL ── */

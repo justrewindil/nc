@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
 import { X, Package } from 'lucide-react';
 import { tmdb } from '../lib/tmdb';
-import { PACK_COST, PACK_SIZE, RARITIES, poolOdds } from '../lib/cards';
+import { PACK_COST, RARITIES, poolOdds } from '../lib/cards';
 import { useStore } from '../context/StoreContext';
 import { useLanguage } from '../context/LanguageContext';
+import CardArt from './CardArt';
 
 export default function PackOddsModal() {
   const { oddsView, closeOdds, openPack, coins, packBusy } = useStore();
@@ -38,23 +39,40 @@ export default function PackOddsModal() {
         {!odds ? (
           <div className="center-spin"><div className="spin" /></div>
         ) : (
-          <div className="odds-rows">
-            {odds.rows.map(({ rarity, pct, count }) => {
-              const r = RARITIES[rarity];
-              return (
-                <div className="odds-row" key={rarity} style={{ '--rc': r.color }}>
-                  <div className="odds-row-top">
-                    <span className="odds-name">{r.label}</span>
-                    <span className="odds-pct">{pct}%</span>
+          <>
+            <div className="odds-rows">
+              {odds.rows.map(({ rarity, pct }) => {
+                const r = RARITIES[rarity];
+                return (
+                  <div className="odds-row" key={rarity} style={{ '--rc': r.color }}>
+                    <div className="odds-row-top">
+                      <span className="odds-name">{r.label}</span>
+                      <span className="odds-pct">{pct}%</span>
+                    </div>
+                    <div className="odds-bar"><span style={{ width: `${pct}%` }} /></div>
                   </div>
-                  <div className="odds-bar"><span style={{ width: `${pct}%` }} /></div>
-                  {odds.examples[rarity]?.length > 0 && (
-                    <div className="odds-eg">{count > 0 ? odds.examples[rarity].join(', ') + (count > 3 ? '…' : '') : '—'}</div>
-                  )}
-                </div>
-              );
-            })}
-          </div>
+                );
+              })}
+            </div>
+            <div className="odds-pool-label">{t('possibleCards')} ({odds.list.length})</div>
+            <div className="odds-pool">
+              {odds.list.map((c) => {
+                const r = RARITIES[c.rarity];
+                return (
+                  <div key={c.actorId} className={`gcard r-${c.rarity}`} style={{ '--rc': r.color, cursor: 'default' }}>
+                    <div className="gcard-img">
+                      <CardArt card={c} />
+                      <span className="gcard-rarity">{r.label}</span>
+                    </div>
+                    <div className="gcard-name">
+                      <span className="gcard-char">{c.character || c.name}</span>
+                      {c.character ? <span className="gcard-actor">{c.name}</span> : null}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </>
         )}
 
         <button className="btn-accent odds-open" disabled={packBusy || !canAfford} onClick={open}>

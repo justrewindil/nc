@@ -65,7 +65,7 @@ export const STRINGS = {
     packSearch: 'Search any movie or show to open a pack…',
     moment: 'Moment', watchEpisode: 'Watch Episode',
     oddsTitle: 'Pack Odds', oddsHint: 'Each pack = 5 cards · lead roles are rarer, plus bonus scene & episode Moments',
-    notEnough: 'Not enough coins',
+    notEnough: 'Not enough coins', possibleCards: 'Cards you can win',
   },
   he: {
     home: 'בית', movies: 'סרטים', tv: 'סדרות', watchlist: 'הרשימה שלי',
@@ -123,7 +123,7 @@ export const STRINGS = {
     packSearch: 'חפש סרט או סדרה כדי לפתוח חבילה…',
     moment: 'רגע', watchEpisode: 'צפה בפרק',
     oddsTitle: 'סיכויי החבילה', oddsHint: 'כל חבילה = 5 קלפים · תפקידים ראשיים נדירים יותר, בתוספת קלפי רגעים',
-    notEnough: 'אין מספיק מטבעות',
+    notEnough: 'אין מספיק מטבעות', possibleCards: 'קלפים שאפשר לזכות בהם',
   },
 };
 

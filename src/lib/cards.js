@@ -46,11 +46,11 @@ export function poolOdds(cast) {
   pool.forEach((c) => { counts[rarityFor(c.popularity, c.order)]++; });
   const total = pool.length || 1;
   const rows = RARITY_ORDER.map((r) => ({ rarity: r, count: counts[r], pct: Math.round((counts[r] / total) * 100) }));
-  const examples = {};
-  RARITY_ORDER.forEach((r) => {
-    examples[r] = pool.filter((c) => rarityFor(c.popularity, c.order) === r).slice(0, 3).map((c) => c.name);
-  });
-  return { rows, total, examples };
+  // full list of possible cards (with images), sorted rarest first
+  const list = pool
+    .map((c) => ({ actorId: c.id, name: c.name, character: c.character || '', profile: c.profile_path || '', rarity: rarityFor(c.popularity, c.order) }))
+    .sort((a, b) => RARITY_ORDER.indexOf(a.rarity) - RARITY_ORDER.indexOf(b.rarity));
+  return { rows, total, list };
 }
 
 // build a pack: 5 distinct actors from a title, each as a role card tied to that title

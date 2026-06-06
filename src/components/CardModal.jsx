@@ -15,7 +15,7 @@ export default function CardModal() {
   const r = RARITIES[c.rarity] || RARITIES.common;
   const isMoment = c.kind === 'moment';
   const type = c.mediaType || (c.season ? 'tv' : 'movie');
-  const wide = isMoment || (c.kind === 'role' && c.scene);
+  const wide = isMoment; // moments are landscape stills; role cards are portrait
 
   const watch = () => {
     if (isMoment && type === 'tv' && c.season) openPlayer(c.mediaId, 'tv', { season: c.season, episode: c.episode });
