@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Search, LogOut } from 'lucide-react';
+import { Search, LogOut, Coins } from 'lucide-react';
 import { tmdb, IMG, typeOf, titleOf, yearOf } from '../lib/tmdb';
 import { useStore } from '../context/StoreContext';
 import { useAuth } from '../context/AuthContext';
@@ -9,7 +9,7 @@ import { useLanguage } from '../context/LanguageContext';
 export default function Nav() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { openDetail, watchlist } = useStore();
+  const { openDetail, watchlist, coins } = useStore();
   const { user, signOut } = useAuth();
   const { t, lang, toggle } = useLanguage();
   const [scrolled, setScrolled] = useState(false);
@@ -115,6 +115,9 @@ export default function Nav() {
         )}
       </div>
       <div className="nav-user">
+        <button className="coin-pill" onClick={() => navigate('/cards')} title={t('cards')}>
+          <Coins size={15} /> {coins.toLocaleString()}
+        </button>
         <button className="lang-toggle" onClick={toggle} title="Language">{lang === 'he' ? 'EN' : 'עב'}</button>
         <div className="nav-avatar" title={t('profile')} style={{ cursor: 'pointer' }} onClick={() => navigate('/profile')}>{(user?.email || '?')[0]}</div>
         <button className="nav-logout" onClick={signOut}><LogOut size={14} /><span>{t('logout')}</span></button>

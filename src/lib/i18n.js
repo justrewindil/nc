@@ -56,6 +56,12 @@ export const STRINGS = {
     comments: 'Comments', writeComment: 'Write a comment…', postComment: 'Post',
     noComments: 'No comments yet. Be the first!', signinToComment: 'Sign in to comment',
     overview: 'Overview',
+    // card game
+    coins: 'Coins', cards: 'Cards', cardsOwned: 'cards', perMinute: 'min watched',
+    openPack: 'Open Pack', packHint: 'Open a pack to collect actor cards from any title',
+    myCards: 'My Collection', allCards: 'All', noCards: 'No cards yet',
+    noCardsDesc: 'Watch to earn coins, then open packs to collect actor cards.',
+    packOpened: 'Pack Opened!', dupesRefunded: 'Duplicates refunded', awesome: 'Awesome!',
   },
   he: {
     home: 'בית', movies: 'סרטים', tv: 'סדרות', watchlist: 'הרשימה שלי',
@@ -105,6 +111,11 @@ export const STRINGS = {
     comments: 'תגובות', writeComment: 'כתוב תגובה…', postComment: 'פרסם',
     noComments: 'אין תגובות עדיין. היה הראשון!', signinToComment: 'התחבר כדי להגיב',
     overview: 'תקציר',
+    coins: 'מטבעות', cards: 'קלפים', cardsOwned: 'קלפים', perMinute: 'דקת צפייה',
+    openPack: 'פתח חבילה', packHint: 'פתח חבילה כדי לאסוף קלפי שחקנים מכל כותר',
+    myCards: 'האוסף שלי', allCards: 'הכל', noCards: 'אין קלפים עדיין',
+    noCardsDesc: 'צפה כדי להרוויח מטבעות, ואז פתח חבילות לאיסוף קלפי שחקנים.',
+    packOpened: 'החבילה נפתחה!', dupesRefunded: 'כפילויות הוחזרו', awesome: 'מעולה!',
   },
 };
 

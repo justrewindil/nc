@@ -5,7 +5,7 @@ import { useStore } from '../context/StoreContext';
 import { useLanguage } from '../context/LanguageContext';
 
 export default function Player() {
-  const { player, closePlayer, saveCw, updateCw, getCw } = useStore();
+  const { player, closePlayer, saveCw, updateCw, getCw, addWatchTime } = useStore();
   const { t } = useLanguage();
 
   const [meta, setMeta] = useState({ title: '', sub: '', thumb: '' });
@@ -24,6 +24,7 @@ export default function Player() {
   const actionsRef = useRef({});
   const loadedRef = useRef(false);   // did the current iframe fire onLoad?
   const attemptsRef = useRef(0);     // auto-fallback attempts for current title
+  const lastTimeRef = useRef(0);     // last reported playback time (for watch-time coins)
 
   const isTV = player && !player.trailerKey && player.type === 'tv';
 
@@ -116,13 +117,14 @@ export default function Player() {
   };
 
   // keep latest values/actions available to listeners + timers
-  ref.current = { player, season, ep, episodes, source };
+  ref.current = { player, season, ep, episodes, source, addWatchTime };
   actionsRef.current = { pickEp, switchSrc };
 
   // ── auto server-fallback: if the iframe never loads, try the next server ──
   useEffect(() => {
     if (!src || isTrailer) return;
     loadedRef.current = false;
+    lastTimeRef.current = 0;
     const timer = setTimeout(() => {
       if (loadedRef.current) return;                 // it loaded fine
       if (attemptsRef.current >= SOURCES.length - 1) return; // tried them all
@@ -143,6 +145,12 @@ export default function Player() {
       const { player: pl, season: s, ep: e } = ref.current;
       if (!pl || pl.trailerKey) return;
       const p = d.data;
+      // award coins for confirmed forward playback (watch-time → coins)
+      if (p.event === 'timeupdate' && typeof p.currentTime === 'number') {
+        const delta = p.currentTime - lastTimeRef.current;
+        lastTimeRef.current = p.currentTime;
+        if (delta > 0) ref.current.addWatchTime?.(delta);
+      }
       const patch = {};
       if (typeof p.currentTime === 'number') patch.currentTime = p.currentTime;
       if (typeof p.duration === 'number') patch.duration = p.duration;

@@ -7,6 +7,7 @@ import ErrorBoundary from './components/ErrorBoundary';
 import Nav from './components/Nav';
 import MobileNav from './components/MobileNav';
 import Player from './components/Player';
+import PackModal from './components/PackModal';
 import Toasts from './components/Toasts';
 import BackToTop from './components/BackToTop';
 
@@ -20,6 +21,7 @@ const ProfilePage = lazy(() => import('./pages/ProfilePage'));
 const DetailPage = lazy(() => import('./pages/DetailPage'));
 const PersonPage = lazy(() => import('./pages/PersonPage'));
 const CollectionPage = lazy(() => import('./pages/CollectionPage'));
+const CardsPage = lazy(() => import('./pages/CardsPage'));
 const Login = lazy(() => import('./pages/Login'));
 const Signup = lazy(() => import('./pages/Signup'));
 const ForgotPassword = lazy(() => import('./pages/ForgotPassword'));
@@ -52,6 +54,7 @@ function AppShell() {
       <main><Suspense fallback={<FullSpin />}><Outlet /></Suspense></main>
       <MobileNav />
       <Player />
+      <PackModal />
       <Toasts />
       <BackToTop />
     </StoreProvider>
@@ -79,6 +82,7 @@ export default function App() {
                     <Route path="/search" element={<SearchPage />} />
                     <Route path="/watchlist" element={<WatchlistPage />} />
                     <Route path="/favorites" element={<FavoritesPage />} />
+                    <Route path="/cards" element={<CardsPage />} />
                     <Route path="/profile" element={<ProfilePage />} />
                     <Route path="/title/:type/:id" element={<DetailPage />} />
                     <Route path="/person/:id" element={<PersonPage />} />

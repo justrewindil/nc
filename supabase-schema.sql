@@ -61,17 +61,41 @@ create table if not exists public.comments (
   created_at  timestamptz default now()
 );
 
+-- CARD GAME: WALLET (coins)
+create table if not exists public.wallets (
+  user_id      uuid primary key references auth.users on delete cascade,
+  coins        integer default 0,
+  earned_today integer default 0,
+  day_key      text,
+  updated_at   timestamptz default now()
+);
+
+-- CARD GAME: OWNED ACTOR CARDS
+create table if not exists public.cards (
+  user_id  uuid not null references auth.users on delete cascade,
+  actor_id integer not null,
+  name     text,
+  profile  text,
+  rarity   text,
+  count    integer default 1,
+  primary key (user_id, actor_id)
+);
+
 -- ── Row Level Security ──
 alter table public.library  enable row level security;
 alter table public.progress enable row level security;
 alter table public.ratings  enable row level security;
 alter table public.profiles enable row level security;
 alter table public.comments enable row level security;
+alter table public.wallets  enable row level security;
+alter table public.cards    enable row level security;
 
 -- owner-only access for personal data
 create policy "own library"  on public.library  for all using (auth.uid() = user_id) with check (auth.uid() = user_id);
 create policy "own progress" on public.progress for all using (auth.uid() = user_id) with check (auth.uid() = user_id);
 create policy "own ratings"  on public.ratings  for all using (auth.uid() = user_id) with check (auth.uid() = user_id);
+create policy "own wallet"   on public.wallets  for all using (auth.uid() = user_id) with check (auth.uid() = user_id);
+create policy "own cards"    on public.cards    for all using (auth.uid() = user_id) with check (auth.uid() = user_id);
 
 -- profiles: anyone signed-in can read (for comment names), only owner writes
 create policy "profiles read"  on public.profiles for select using (true);

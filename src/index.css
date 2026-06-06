@@ -749,6 +749,69 @@ main{padding-top:var(--nav-h);min-height:100vh}
 .cmt-del:hover{color:var(--accent)}
 .cmt-text{font-size:14px;line-height:1.5;color:rgba(240,240,245,.85)}
 
+/* ── CARD GAME ── */
+.coin-pill{display:flex;align-items:center;gap:6px;background:rgba(245,197,24,.12);border:1px solid rgba(245,197,24,.35);color:var(--gold);font-weight:700;font-size:13px;border-radius:8px;padding:7px 12px;transition:all .2s}
+.coin-pill:hover{background:rgba(245,197,24,.22);transform:translateY(-1px)}
+.coin-pill svg{color:var(--gold)}
+
+.cards-page{padding-bottom:48px}
+.cards-hero{display:flex;align-items:center;gap:22px;flex-wrap:wrap;padding:32px 4vw 8px}
+.cards-wallet{display:flex;align-items:center;gap:14px;background:var(--glass);border:1px solid rgba(245,197,24,.3);border-radius:16px;padding:16px 24px;box-shadow:0 0 30px -10px rgba(245,197,24,.4)}
+.coin-ic{color:var(--gold)}
+.cw-coins{font-family:var(--font-display);font-size:30px;font-weight:800;color:var(--gold);line-height:1}
+.cw-label{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+.cards-stat{display:flex;align-items:center;gap:8px;font-size:15px;font-weight:600;color:var(--text)}
+.cards-earn{font-size:13px;color:var(--green);background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.25);padding:7px 12px;border-radius:8px;margin-left:auto}
+
+/* pack picker */
+.pack-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:16px}
+.pack-pick{background:var(--glass);border:1px solid var(--glass-border);border-radius:12px;overflow:hidden}
+.pack-pick img{width:100%;aspect-ratio:2/3;object-fit:cover}
+.pack-pick-info{padding:10px}
+.pack-pick-title{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:8px}
+.pack-open-btn{width:100%;justify-content:center;font-size:13px;padding:8px}
+.pack-open-btn:disabled{opacity:.45;cursor:not-allowed}
+
+/* rarity filters */
+.rarity-filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px}
+.rf{font-size:13px;font-weight:600;padding:7px 14px;border-radius:20px;border:1px solid var(--glass-border);background:var(--glass);color:var(--muted);transition:all .2s}
+.rf:hover{color:var(--text)}
+.rf.on{color:#fff;background:color-mix(in srgb,var(--rc,var(--accent)) 25%,transparent);border-color:var(--rc,var(--accent))}
+
+/* collectible cards */
+.gcard-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:16px}
+.gcard{border-radius:14px;overflow:hidden;background:var(--surface2);border:1px solid var(--rc);box-shadow:0 0 0 1px color-mix(in srgb,var(--rc) 40%,transparent),0 10px 28px -12px rgba(0,0,0,.8);position:relative;transition:transform .3s}
+.gcard:hover{transform:translateY(-5px)}
+.gcard-img{position:relative;aspect-ratio:2/3;overflow:hidden;background:var(--surface3)}
+.gcard-img img{width:100%;height:100%;object-fit:cover}
+.gcard-noimg{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-size:48px;font-weight:800;color:var(--rc);background:radial-gradient(circle at 50% 30%,color-mix(in srgb,var(--rc) 30%,transparent),transparent 70%)}
+.gcard-img::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,color-mix(in srgb,var(--rc) 35%,transparent),transparent 55%)}
+.gcard-rarity{position:absolute;top:8px;left:8px;z-index:2;font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:#000;background:var(--rc);padding:3px 8px;border-radius:5px}
+.gcard-count{position:absolute;top:8px;right:8px;z-index:2;font-size:11px;font-weight:800;color:#fff;background:rgba(0,0,0,.75);padding:3px 8px;border-radius:20px}
+.gcard-new{position:absolute;bottom:8px;right:8px;z-index:2;font-size:9px;font-weight:800;color:#000;background:var(--green);padding:3px 7px;border-radius:5px}
+.gcard-dupe{position:absolute;bottom:8px;right:8px;z-index:2;font-size:10px;font-weight:700;color:var(--gold);background:rgba(0,0,0,.75);padding:3px 7px;border-radius:5px}
+.gcard-name{padding:9px 10px;font-size:13px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+/* foil sheen for top rarities */
+.gcard.r-legendary .gcard-img::before,.gcard.r-epic .gcard-img::before{content:'';position:absolute;inset:0;z-index:1;background:linear-gradient(115deg,transparent 30%,rgba(255,255,255,.28) 48%,transparent 60%);background-size:250% 100%;animation:foil 3.5s ease-in-out infinite}
+@keyframes foil{0%{background-position:200% 0}100%{background-position:-60% 0}}
+
+/* ── PACK OPEN MODAL ── */
+.pack-overlay{position:fixed;inset:0;z-index:2100;background:rgba(0,0,0,.82);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);display:flex;align-items:center;justify-content:center;padding:20px;animation:tin .25s ease}
+.pack-box{position:relative;background:var(--glass-strong);border:1px solid var(--glass-border);border-radius:20px;padding:30px;max-width:760px;width:100%;text-align:center;box-shadow:0 40px 90px rgba(0,0,0,.85),0 0 80px -20px var(--glow)}
+.pack-head{display:flex;align-items:center;justify-content:center;gap:8px;font-family:var(--font-display);font-size:24px;font-weight:800;margin-bottom:22px;color:var(--gold)}
+.pack-cards{display:flex;justify-content:center;gap:14px;flex-wrap:wrap;margin-bottom:20px;perspective:1000px}
+.pack-cards .gcard{width:130px;animation:cardReveal .5s cubic-bezier(.2,.7,.3,1) backwards}
+@keyframes cardReveal{from{opacity:0;transform:rotateY(90deg) scale(.7)}to{opacity:1;transform:none}}
+.pack-refund{font-size:14px;color:var(--gold);margin-bottom:18px}
+.pack-done{margin:0 auto;display:flex}
+
+@media(max-width:768px){
+  .cards-hero{gap:14px;padding:24px 16px 4px}
+  .cards-earn{margin-left:0}
+  .gcard-grid,.pack-grid{grid-template-columns:repeat(auto-fill,minmax(115px,1fr));gap:12px}
+  .pack-cards .gcard{width:96px}
+}
+
 /* ── ADVANCED FILTERS ── */
 .filter-num{width:auto}
 [dir="rtl"] .dp-back{left:auto;right:18px}

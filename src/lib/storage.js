@@ -17,3 +17,11 @@ export const loadFavorites = (uid) => read(favKey(uid));
 export const saveFavorites = (uid, v) => write(favKey(uid), v);
 export const loadRatings = (uid) => readObj(rateKey(uid)); // { "movie-603": 8, ... }
 export const saveRatings = (uid, v) => write(rateKey(uid), v);
+
+// ── card game ──
+export const coinsKey = (uid) => `jfz_coins_${u(uid)}`;
+export const cardsKey = (uid) => `jfz_cards_${u(uid)}`;
+export const loadWallet = (uid) => { const w = readObj(coinsKey(uid)); return { coins: w.coins || 0, dayKey: w.dayKey || '', earnedToday: w.earnedToday || 0 }; };
+export const saveWallet = (uid, v) => write(coinsKey(uid), v);
+export const loadCards = (uid) => read(cardsKey(uid)); // [{actorId,name,profile,rarity,count}]
+export const saveCards = (uid, v) => write(cardsKey(uid), v);

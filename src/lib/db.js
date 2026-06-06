@@ -85,6 +85,34 @@ export async function upsertProfile(uid, patch) {
   return supabase.from('profiles').upsert({ id: uid, ...patch, updated_at: new Date().toISOString() });
 }
 
+// ── card game: wallet ──
+export async function fetchWallet(uid) {
+  if (!isSupabaseReady || !uid) return null;
+  const { data, error } = await supabase.from('wallets').select('*').eq('user_id', uid).maybeSingle();
+  if (error) return null;
+  return data ? { coins: data.coins || 0, dayKey: data.day_key || '', earnedToday: data.earned_today || 0 } : { coins: 0, dayKey: '', earnedToday: 0 };
+}
+export async function upsertWallet(uid, w) {
+  if (!isSupabaseReady || !uid) return;
+  await supabase.from('wallets').upsert({
+    user_id: uid, coins: w.coins, day_key: w.dayKey, earned_today: w.earnedToday, updated_at: new Date().toISOString(),
+  }, { onConflict: 'user_id' });
+}
+
+// ── card game: cards ──
+export async function fetchCards(uid) {
+  if (!isSupabaseReady || !uid) return null;
+  const { data, error } = await supabase.from('cards').select('*').eq('user_id', uid);
+  if (error) return null;
+  return data.map((r) => ({ actorId: r.actor_id, name: r.name, profile: r.profile || '', rarity: r.rarity, count: r.count || 1 }));
+}
+export async function upsertCard(uid, c) {
+  if (!isSupabaseReady || !uid) return;
+  await supabase.from('cards').upsert({
+    user_id: uid, actor_id: c.actorId, name: c.name, profile: c.profile || '', rarity: c.rarity, count: c.count,
+  }, { onConflict: 'user_id,actor_id' });
+}
+
 // ── comments ──
 export async function fetchComments(id, type) {
   if (!isSupabaseReady) return [];
