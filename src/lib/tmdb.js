@@ -44,17 +44,23 @@ export function pickLogo(images) {
   return images.logos.find((l) => l.file_path?.endsWith('.png')) || images.logos[0] || null;
 }
 
-// ── Streaming sources (VidKing primary) ──
+// ── Streaming sources ──
+// Default subtitle language follows the app language (he → Hebrew subs).
+const subCode = () => (currentLang && currentLang.toLowerCase().startsWith('he') ? 'he' : 'en');
 function vkParams(resume = 0) {
-  const p = new URLSearchParams({ color: PLAYER_COLOR, autoPlay: 'true' });
+  const p = new URLSearchParams({ color: PLAYER_COLOR, autoPlay: 'true', sub_lang: subCode() });
   if (resume > 0) p.set('progress', Math.floor(resume));
   return p;
 }
 export const SOURCES = [
-  { name: 'VidLink', url: (id, t, s, e) => t === 'tv'
-      ? `https://vidlink.pro/tv/${id}/${s}/${e}` : `https://vidlink.pro/movie/${id}` },
+  // VidLink supports a default subtitle via ?sub= (OpenSubtitles)
+  { name: 'VidLink', url: (id, t, s, e) => {
+      const base = t === 'tv' ? `https://vidlink.pro/tv/${id}/${s}/${e}` : `https://vidlink.pro/movie/${id}`;
+      return `${base}?autoplay=true&title=true&sub=${subCode()}`;
+    } },
+  // VidSrc family uses ?ds_lang= to set the default subtitle language
   { name: 'VidSrc', url: (id, t, s, e) => t === 'tv'
-      ? `https://vidsrc.to/embed/tv/${id}/${s}/${e}` : `https://vidsrc.to/embed/movie/${id}` },
+      ? `https://vidsrc.to/embed/tv/${id}/${s}/${e}?ds_lang=${subCode()}` : `https://vidsrc.to/embed/movie/${id}?ds_lang=${subCode()}` },
   { name: 'VidKing', url: (id, t, s, e, resume = 0) => {
       const p = vkParams(resume);
       if (t === 'tv') { p.set('nextEpisode', 'true'); p.set('episodeSelector', 'true');
@@ -66,7 +72,7 @@ export const SOURCES = [
   { name: 'MultiEmbed', url: (id, t, s, e) => t === 'tv'
       ? `https://multiembed.mov/?video_id=${id}&tmdb=1&s=${s}&e=${e}` : `https://multiembed.mov/?video_id=${id}&tmdb=1` },
   { name: 'VidSrc.cc', url: (id, t, s, e) => t === 'tv'
-      ? `https://vidsrc.cc/v2/embed/tv/${id}/${s}/${e}` : `https://vidsrc.cc/v2/embed/movie/${id}` },
+      ? `https://vidsrc.cc/v2/embed/tv/${id}/${s}/${e}?ds_lang=${subCode()}` : `https://vidsrc.cc/v2/embed/movie/${id}?ds_lang=${subCode()}` },
 ];
 
 // ── helpers ──
