@@ -19,7 +19,7 @@ export default function PackModal() {
           {cards.map((c, i) => {
             const r = RARITIES[c.rarity];
             return (
-              <div key={`${c.actorId}-${i}`} className={`gcard r-${c.rarity}`} style={{ '--rc': r.color, animationDelay: `${i * 0.12}s` }}>
+              <div key={`${c.key}-${i}`} className={`gcard r-${c.rarity}`} style={{ '--rc': r.color, animationDelay: `${i * 0.12}s` }}>
                 <div className="gcard-img">
                   {c.profile
                     ? <img src={`${IMG}/w342${c.profile}`} alt={c.name} />
@@ -27,7 +27,10 @@ export default function PackModal() {
                   <span className="gcard-rarity">{r.label}</span>
                   {c.isNew ? <span className="gcard-new">NEW</span> : <span className="gcard-dupe">+{r.shard}🪙</span>}
                 </div>
-                <div className="gcard-name">{c.name}</div>
+                <div className="gcard-name">
+                  <span className="gcard-char">{c.character || c.name}</span>
+                  {c.character ? <span className="gcard-actor">{c.name}</span> : null}
+                </div>
               </div>
             );
           })}

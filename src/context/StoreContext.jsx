@@ -169,14 +169,14 @@ export function StoreProvider({ children }) {
     setPackBusy(true);
     try {
       const credits = await tmdb(`/${type}/${id}/credits`);
-      const pulled = buildPack(credits.cast || []);
+      const pulled = buildPack(credits.cast || [], Number(id), titleName);
       if (!pulled.length) { toast('No cards available for this title', 'err'); setPackBusy(false); return; }
       let refund = 0;
       const result = [];
       setCards((list) => {
         const next = [...list];
         for (const c of pulled) {
-          const idx = next.findIndex((x) => x.actorId === c.actorId);
+          const idx = next.findIndex((x) => x.key === c.key);
           let isNew = false;
           if (idx > -1) { next[idx] = { ...next[idx], count: next[idx].count + 1 }; refund += RARITIES[c.rarity].shard; db.upsertCard(uid, next[idx]); }
           else { const card = { ...c, count: 1 }; next.push(card); isNew = true; db.upsertCard(uid, card); }

@@ -70,15 +70,19 @@ create table if not exists public.wallets (
   updated_at   timestamptz default now()
 );
 
--- CARD GAME: OWNED ACTOR CARDS
+-- CARD GAME: OWNED CARDS (actor-in-a-role; one actor can have many cards)
 create table if not exists public.cards (
-  user_id  uuid not null references auth.users on delete cascade,
-  actor_id integer not null,
-  name     text,
-  profile  text,
-  rarity   text,
-  count    integer default 1,
-  primary key (user_id, actor_id)
+  user_id     uuid not null references auth.users on delete cascade,
+  card_id     text not null,          -- "<actorId>-<mediaId>"
+  actor_id    integer not null,
+  name        text,
+  character   text,
+  profile     text,
+  rarity      text,
+  media_id    integer,
+  media_title text,
+  count       integer default 1,
+  primary key (user_id, card_id)
 );
 
 -- ── Row Level Security ──
@@ -90,7 +94,18 @@ alter table public.comments enable row level security;
 alter table public.wallets  enable row level security;
 alter table public.cards    enable row level security;
 
--- owner-only access for personal data
+-- owner-only access for personal data (drop-then-create = safe to re-run)
+drop policy if exists "own library"  on public.library;
+drop policy if exists "own progress" on public.progress;
+drop policy if exists "own ratings"  on public.ratings;
+drop policy if exists "own wallet"   on public.wallets;
+drop policy if exists "own cards"    on public.cards;
+drop policy if exists "profiles read"  on public.profiles;
+drop policy if exists "profiles write" on public.profiles;
+drop policy if exists "comments read"   on public.comments;
+drop policy if exists "comments insert" on public.comments;
+drop policy if exists "comments delete" on public.comments;
+
 create policy "own library"  on public.library  for all using (auth.uid() = user_id) with check (auth.uid() = user_id);
 create policy "own progress" on public.progress for all using (auth.uid() = user_id) with check (auth.uid() = user_id);
 create policy "own ratings"  on public.ratings  for all using (auth.uid() = user_id) with check (auth.uid() = user_id);

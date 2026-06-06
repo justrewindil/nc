@@ -11,18 +11,45 @@ export default function CardsPage() {
   const [titles, setTitles] = useState([]);
   const [filter, setFilter] = useState('');
 
+  // big mixed pool of movies + TV to open packs from
   useEffect(() => {
-    tmdb('/trending/all/week').then((d) => setTitles((d.results || []).filter((r) => r.poster_path).slice(0, 12))).catch(() => {});
+    let alive = true;
+    Promise.all([
+      tmdb('/trending/all/week'),
+      tmdb('/movie/popular'),
+      tmdb('/tv/popular'),
+      tmdb('/movie/top_rated'),
+      tmdb('/tv/top_rated'),
+    ]).then((res) => {
+      if (!alive) return;
+      const forced = [null, 'movie', 'tv', 'movie', 'tv'];
+      const seen = new Set();
+      const merged = [];
+      res.forEach((d, i) => {
+        (d.results || []).forEach((r) => {
+          if (!r.poster_path) return;
+          const it = forced[i] ? { ...r, media_type: forced[i] } : r;
+          const type = typeOf(it);
+          const key = `${type}-${it.id}`;
+          if (seen.has(key)) return;
+          seen.add(key);
+          merged.push(it);
+        });
+      });
+      // shuffle a little for variety, keep 40
+      setTitles(merged.sort(() => Math.random() - 0.5).slice(0, 40));
+    }).catch(() => {});
+    return () => { alive = false; };
   }, [lang]);
 
   const sorted = [...cards].sort((a, b) =>
-    RARITY_ORDER.indexOf(a.rarity) - RARITY_ORDER.indexOf(b.rarity) || a.name.localeCompare(b.name));
+    RARITY_ORDER.indexOf(a.rarity) - RARITY_ORDER.indexOf(b.rarity) ||
+    (a.character || a.name).localeCompare(b.character || b.name));
   const shown = filter ? sorted.filter((c) => c.rarity === filter) : sorted;
   const byRarity = RARITY_ORDER.map((r) => ({ r, n: cards.filter((c) => c.rarity === r).length }));
 
   return (
     <div className="cards-page page-in">
-      {/* wallet header */}
       <div className="cards-hero">
         <div className="cards-wallet">
           <Coins size={26} className="coin-ic" />
@@ -32,15 +59,16 @@ export default function CardsPage() {
         <div className="cards-earn">+{COINS_PER_MIN} 🪙 / {t('perMinute')}</div>
       </div>
 
-      {/* open packs */}
       <div className="browse-wrap" style={{ paddingTop: 8 }}>
-        <h2 className="browse-title" style={{ marginBottom: 6 }}><Package size={22} style={{ verticalAlign: '-4px', marginRight: 8 }} />{t('openPack')}</h2>
+        <h2 className="browse-title" style={{ marginBottom: 6 }}>
+          <Package size={22} style={{ verticalAlign: '-4px', marginRight: 8 }} />{t('openPack')}
+        </h2>
         <p style={{ color: 'var(--muted)', fontSize: 14, marginBottom: 20 }}>{t('packHint')} · {PACK_COST} 🪙</p>
         <div className="pack-grid">
           {titles.map((it) => {
             const type = typeOf(it);
             return (
-              <div key={it.id} className="pack-pick">
+              <div key={`${type}-${it.id}`} className="pack-pick">
                 <img src={`${IMG}/w342${it.poster_path}`} alt={titleOf(it)} loading="lazy" />
                 <div className="pack-pick-info">
                   <div className="pack-pick-title">{titleOf(it)}</div>
@@ -55,7 +83,6 @@ export default function CardsPage() {
         </div>
       </div>
 
-      {/* collection */}
       <div className="browse-wrap" style={{ paddingTop: 8 }}>
         <h2 className="browse-title" style={{ marginBottom: 16 }}>{t('myCards')}</h2>
         <div className="rarity-filters">
@@ -73,13 +100,17 @@ export default function CardsPage() {
             {shown.map((c) => {
               const r = RARITIES[c.rarity];
               return (
-                <div key={c.actorId} className={`gcard r-${c.rarity}`} style={{ '--rc': r.color }}>
+                <div key={c.key} className={`gcard r-${c.rarity}`} style={{ '--rc': r.color }}>
                   <div className="gcard-img">
                     {c.profile ? <img src={`${IMG}/w342${c.profile}`} alt={c.name} loading="lazy" /> : <div className="gcard-noimg">{c.name[0]}</div>}
                     <span className="gcard-rarity">{r.label}</span>
                     {c.count > 1 && <span className="gcard-count">×{c.count}</span>}
                   </div>
-                  <div className="gcard-name">{c.name}</div>
+                  <div className="gcard-name">
+                    <span className="gcard-char">{c.character || c.name}</span>
+                    {c.character ? <span className="gcard-actor">{c.name}</span> : null}
+                    {c.mediaTitle ? <span className="gcard-from">{c.mediaTitle}</span> : null}
+                  </div>
                 </div>
               );
             })}
