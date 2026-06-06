@@ -51,24 +51,22 @@ function vkParams(resume = 0) {
   return p;
 }
 export const SOURCES = [
+  { name: 'VidLink', url: (id, t, s, e) => t === 'tv'
+      ? `https://vidlink.pro/tv/${id}/${s}/${e}` : `https://vidlink.pro/movie/${id}` },
   { name: 'VidSrc', url: (id, t, s, e) => t === 'tv'
-      ? `https://vidsrc.cc/v2/embed/tv/${id}/${s}/${e}` : `https://vidsrc.cc/v2/embed/movie/${id}` },
+      ? `https://vidsrc.to/embed/tv/${id}/${s}/${e}` : `https://vidsrc.to/embed/movie/${id}` },
   { name: 'VidKing', url: (id, t, s, e, resume = 0) => {
       const p = vkParams(resume);
       if (t === 'tv') { p.set('nextEpisode', 'true'); p.set('episodeSelector', 'true');
         return `https://www.vidking.net/embed/tv/${id}/${s}/${e}?${p}`; }
       return `https://www.vidking.net/embed/movie/${id}?${p}`;
     } },
-  { name: 'VidLink', url: (id, t, s, e) => t === 'tv'
-      ? `https://vidlink.pro/tv/${id}/${s}/${e}` : `https://vidlink.pro/movie/${id}` },
-  { name: 'Embed.su', url: (id, t, s, e) => t === 'tv'
-      ? `https://embed.su/embed/tv/${id}/${s}/${e}` : `https://embed.su/embed/movie/${id}` },
-  { name: 'AutoEmbed', url: (id, t, s, e) => t === 'tv'
-      ? `https://player.autoembed.cc/embed/tv/${id}/${s}/${e}` : `https://player.autoembed.cc/embed/movie/${id}` },
-  { name: 'VidSrc.to', url: (id, t, s, e) => t === 'tv'
-      ? `https://vidsrc.to/embed/tv/${id}/${s}/${e}` : `https://vidsrc.to/embed/movie/${id}` },
   { name: '2Embed', url: (id, t, s, e) => t === 'tv'
       ? `https://www.2embed.cc/embedtv/${id}&s=${s}&e=${e}` : `https://www.2embed.cc/embed/${id}` },
+  { name: 'MultiEmbed', url: (id, t, s, e) => t === 'tv'
+      ? `https://multiembed.mov/?video_id=${id}&tmdb=1&s=${s}&e=${e}` : `https://multiembed.mov/?video_id=${id}&tmdb=1` },
+  { name: 'VidSrc.cc', url: (id, t, s, e) => t === 'tv'
+      ? `https://vidsrc.cc/v2/embed/tv/${id}/${s}/${e}` : `https://vidsrc.cc/v2/embed/movie/${id}` },
 ];
 
 // ── helpers ──
