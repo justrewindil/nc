@@ -68,8 +68,9 @@ export default function Player() {
       if (type === 'tv') {
         const ss = (det.seasons || []).filter((s) => s.season_number > 0);
         setSeasons(ss);
-        const rs = saved?.season || 1, re = saved?.episode || 1;
-        const resume = (saved && saved.season === rs && saved.episode === re) ? (saved.currentTime || 0) : 0;
+        // a card/episode can request a specific season+episode; else resume from saved
+        const rs = player.season || saved?.season || 1, re = player.episode || saved?.episode || 1;
+        const resume = (!player.season && saved && saved.season === rs && saved.episode === re) ? (saved.currentTime || 0) : 0;
         saveCw({ id, type, title, poster: det.poster_path || '', backdrop: det.backdrop_path || '', year: yr, season: rs, episode: re });
         loadEps(rs, re, resume, 0);
       } else {

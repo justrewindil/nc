@@ -8,6 +8,7 @@ import Nav from './components/Nav';
 import MobileNav from './components/MobileNav';
 import Player from './components/Player';
 import PackModal from './components/PackModal';
+import CardModal from './components/CardModal';
 import Toasts from './components/Toasts';
 import BackToTop from './components/BackToTop';
 
@@ -55,6 +56,7 @@ function AppShell() {
       <MobileNav />
       <Player />
       <PackModal />
+      <CardModal />
       <Toasts />
       <BackToTop />
     </StoreProvider>

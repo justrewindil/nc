@@ -40,7 +40,7 @@ export function shuffle(a) {
 }
 
 // build a pack: 5 distinct actors from a title, each as a role card tied to that title
-export function buildPack(cast, mediaId, mediaTitle, size = PACK_SIZE) {
+export function buildPack(cast, mediaId, mediaTitle, mediaType = 'movie', size = PACK_SIZE) {
   const pool = (cast || []).filter((c) => c.id && c.name).slice(0, 20);
   const picked = [];
   const used = new Set();
@@ -60,6 +60,7 @@ export function buildPack(cast, mediaId, mediaTitle, size = PACK_SIZE) {
       rarity: rarityFor(c.popularity, c.order),
       mediaId,
       mediaTitle: mediaTitle || '',
+      mediaType,
     });
   }
   return picked;

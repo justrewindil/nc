@@ -82,6 +82,9 @@ create table if not exists public.cards (
   rarity      text,
   media_id    integer,
   media_title text,
+  media_type  text,
+  season      integer,
+  episode     integer,
   count       integer default 1,
   primary key (user_id, card_id)
 );

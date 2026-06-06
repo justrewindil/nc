@@ -6,7 +6,7 @@ import { useStore } from '../context/StoreContext';
 import { useLanguage } from '../context/LanguageContext';
 
 export default function CardsPage() {
-  const { coins, cards, ownedCount, openPack, packBusy } = useStore();
+  const { coins, cards, ownedCount, openPack, packBusy, openCardView } = useStore();
   const { t, lang } = useLanguage();
   const [titles, setTitles] = useState([]);
   const [filter, setFilter] = useState('');
@@ -124,7 +124,7 @@ export default function CardsPage() {
             {shown.map((c) => {
               const r = RARITIES[c.rarity];
               return (
-                <div key={c.key} className={`gcard r-${c.rarity}`} style={{ '--rc': r.color }}>
+                <div key={c.key} className={`gcard r-${c.rarity}`} style={{ '--rc': r.color }} onClick={() => openCardView(c)}>
                   <div className="gcard-img">
                     {c.profile ? <img src={`${IMG}/w342${c.profile}`} alt={c.name} loading="lazy" /> : <div className="gcard-noimg">{(c.name || '?')[0]}</div>}
                     <span className="gcard-rarity">{r.label}</span>

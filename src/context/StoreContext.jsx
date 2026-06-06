@@ -30,6 +30,7 @@ export function StoreProvider({ children }) {
   const [cards, setCards] = useState([]); // [{actorId,name,profile,rarity,count}]
   const [packResult, setPackResult] = useState(null);
   const [packBusy, setPackBusy] = useState(false);
+  const [cardView, setCardView] = useState(null); // a card being inspected
   const secAccum = useRef(0);
 
   // ── load per-user data (Supabase if available, else localStorage) ──
@@ -183,7 +184,8 @@ export function StoreProvider({ children }) {
               key: `m-${mid}-s${season.season_number}e${e.episode_number}`, kind: 'moment', actorId: 0,
               name: `S${season.season_number}E${e.episode_number}: ${e.name || ''}`.trim(),
               character: '', profile: e.still_path || '', rarity: rarityForVote(e.vote_average),
-              mediaId: mid, mediaTitle: titleName,
+              mediaId: mid, mediaTitle: titleName, mediaType: 'tv',
+              season: season.season_number, episode: e.episode_number,
             }));
           }
         } else {
@@ -194,13 +196,13 @@ export function StoreProvider({ children }) {
           moments = shuffle(ranked).slice(0, 2).map(({ b, rarity }) => ({
             key: `m-${mid}-${(b.file_path || '').replace(/[^a-z0-9]/gi, '').slice(0, 14)}`, kind: 'moment', actorId: 0,
             name: `${titleName} — Scene`, character: '', profile: b.file_path || '', rarity,
-            mediaId: mid, mediaTitle: titleName,
+            mediaId: mid, mediaTitle: titleName, mediaType: 'movie',
           }));
         }
       } catch {}
       // ── role cards (fill the rest of the pack) ──
       const credits = await tmdb(`/${type}/${id}/credits`);
-      const roles = buildPack(credits.cast || [], mid, titleName).slice(0, PACK_SIZE - moments.length);
+      const roles = buildPack(credits.cast || [], mid, titleName, type).slice(0, PACK_SIZE - moments.length);
       const pulled = shuffle([...roles, ...moments]);
       if (!pulled.length) { toast('No cards available for this title', 'err'); setPackBusy(false); return; }
       let refund = 0;
@@ -230,9 +232,11 @@ export function StoreProvider({ children }) {
 
   // ── navigation / overlays ──
   const openDetail = useCallback((id, type) => navigate(`/title/${type}/${id}`), [navigate]);
-  const openPlayer = useCallback((id, type) => setPlayer({ id: Number(id), type }), []);
+  const openPlayer = useCallback((id, type, opts) => setPlayer({ id: Number(id), type, ...(opts || {}) }), []);
   const openTrailer = useCallback((key) => setPlayer({ trailerKey: key }), []);
   const closePlayer = useCallback(() => setPlayer(null), []);
+  const openCardView = useCallback((c) => setCardView(c), []);
+  const closeCardView = useCallback(() => setCardView(null), []);
 
   const value = {
     watchlist, isSaved, toggleWatchlist,
@@ -243,6 +247,7 @@ export function StoreProvider({ children }) {
     player, openDetail, openPlayer, openTrailer, closePlayer,
     coins: wallet.coins, cards, ownedCount, addWatchTime,
     openPack, packResult, closePack, packBusy,
+    cardView, openCardView, closeCardView,
   };
   return <StoreContext.Provider value={value}>{children}</StoreContext.Provider>;
 }

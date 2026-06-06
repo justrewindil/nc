@@ -63,7 +63,7 @@ export const STRINGS = {
     noCardsDesc: 'Watch to earn coins, then open packs to collect actor cards.',
     packOpened: 'Pack Opened!', dupesRefunded: 'Duplicates refunded', awesome: 'Awesome!',
     packSearch: 'Search any movie or show to open a pack…',
-    moment: 'Moment',
+    moment: 'Moment', watchEpisode: 'Watch Episode',
   },
   he: {
     home: 'בית', movies: 'סרטים', tv: 'סדרות', watchlist: 'הרשימה שלי',
@@ -119,7 +119,7 @@ export const STRINGS = {
     noCardsDesc: 'צפה כדי להרוויח מטבעות, ואז פתח חבילות לאיסוף קלפי שחקנים.',
     packOpened: 'החבילה נפתחה!', dupesRefunded: 'כפילויות הוחזרו', awesome: 'מעולה!',
     packSearch: 'חפש סרט או סדרה כדי לפתוח חבילה…',
-    moment: 'רגע',
+    moment: 'רגע', watchEpisode: 'צפה בפרק',
   },
 };
 
