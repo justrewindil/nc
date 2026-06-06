@@ -4,12 +4,14 @@ import { Search, LogOut } from 'lucide-react';
 import { tmdb, IMG, typeOf, titleOf, yearOf } from '../lib/tmdb';
 import { useStore } from '../context/StoreContext';
 import { useAuth } from '../context/AuthContext';
+import { useLanguage } from '../context/LanguageContext';
 
 export default function Nav() {
   const navigate = useNavigate();
   const location = useLocation();
   const { openDetail, watchlist } = useStore();
   const { user, signOut } = useAuth();
+  const { t, lang, toggle } = useLanguage();
   const [scrolled, setScrolled] = useState(false);
   const [q, setQ] = useState('');
   const [results, setResults] = useState(null);
@@ -51,7 +53,7 @@ export default function Nav() {
 
   const goFull = () => { navigate(`/search?q=${encodeURIComponent(q)}`); setOpen(false); };
   const isOn = (path) => location.pathname === path;
-  const tabs = [['/', 'Home'], ['/movies', 'Movies'], ['/tv', 'TV Shows'], ['/watchlist', 'Watchlist']];
+  const tabs = [['/', t('home')], ['/movies', t('movies')], ['/tv', t('tv')], ['/watchlist', t('watchlist')]];
 
   return (
     <nav id="nav" className={scrolled ? 'scrolled' : ''}>
@@ -71,7 +73,7 @@ export default function Nav() {
           <input
             ref={inputRef}
             value={q}
-            placeholder="Search…"
+            placeholder={t('search')}
             onChange={(e) => onChange(e.target.value)}
             onFocus={() => q && setOpen(true)}
             onKeyDown={(e) => { if (e.key === 'Enter' && q.trim()) goFull(); }}
@@ -102,8 +104,9 @@ export default function Nav() {
         )}
       </div>
       <div className="nav-user">
+        <button className="lang-toggle" onClick={toggle} title="Language">{lang === 'he' ? 'EN' : 'עב'}</button>
         <div className="nav-avatar" title={user?.email}>{(user?.email || '?')[0]}</div>
-        <button className="nav-logout" onClick={signOut}><LogOut size={14} /><span>Logout</span></button>
+        <button className="nav-logout" onClick={signOut}><LogOut size={14} /><span>{t('logout')}</span></button>
       </div>
     </nav>
   );

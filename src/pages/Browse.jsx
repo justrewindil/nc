@@ -3,14 +3,16 @@ import { useSearchParams } from 'react-router-dom';
 import { tmdb } from '../lib/tmdb';
 import Card from '../components/Card';
 import Pagination from '../components/Pagination';
+import { useLanguage } from '../context/LanguageContext';
 
 const SORTS = {
-  movie: [['popular', 'Popular'], ['top_rated', 'Top Rated'], ['now_playing', 'Now Playing'], ['upcoming', 'Upcoming']],
-  tv: [['popular', 'Popular'], ['top_rated', 'Top Rated'], ['on_the_air', 'On The Air'], ['airing_today', 'Airing Today']],
+  movie: [['popular', 'popular'], ['top_rated', 'topRated'], ['now_playing', 'nowPlaying'], ['upcoming', 'upcoming']],
+  tv: [['popular', 'popular'], ['top_rated', 'topRated'], ['on_the_air', 'onAir'], ['airing_today', 'airingToday']],
 };
 const YEARS = (() => { const now = new Date().getFullYear(); const a = []; for (let y = now; y >= 1950; y--) a.push(y); return a; })();
 
 export default function Browse({ type }) {
+  const { t, lang } = useLanguage();
   const [params, setParams] = useSearchParams();
   const [genres, setGenres] = useState([]);
   const [sort, setSort] = useState('popular');
@@ -25,7 +27,7 @@ export default function Browse({ type }) {
 
   useEffect(() => {
     tmdb(`/genre/${type}/list`).then((d) => setGenres(d.genres || [])).catch(() => {});
-  }, [type]);
+  }, [type, lang]);
 
   useEffect(() => {
     let alive = true;
@@ -43,26 +45,26 @@ export default function Browse({ type }) {
     };
     fetchData().then((d) => { if (alive) { setData(d); setLoading(false); window.scrollTo(0, 0); } }).catch(() => setLoading(false));
     return () => { alive = false; };
-  }, [type, sort, genre, year, page]);
+  }, [type, sort, genre, year, page, lang]);
 
   const onGenre = (v) => { setGenre(v); setPage(1); if (v) setParams({ genre: v }); else setParams({}); };
 
   return (
     <div className="browse-wrap page-in">
       <div className="browse-head">
-        <h2 className="browse-title">{type === 'movie' ? 'Movies' : 'TV Shows'}</h2>
+        <h2 className="browse-title">{type === 'movie' ? t('movies') : t('tv')}</h2>
         <div className="browse-filters">
           <div className="sort-tabs">
-            {SORTS[type].map(([val, label]) => (
-              <button key={val} className={`sort-tab${sort === val ? ' on' : ''}`} onClick={() => { setSort(val); setPage(1); }}>{label}</button>
+            {SORTS[type].map(([val, key]) => (
+              <button key={val} className={`sort-tab${sort === val ? ' on' : ''}`} onClick={() => { setSort(val); setPage(1); }}>{t(key)}</button>
             ))}
           </div>
           <select className="fselect" value={genre} onChange={(e) => onGenre(e.target.value)}>
-            <option value="">All Genres</option>
+            <option value="">{t('allGenres')}</option>
             {genres.map((g) => <option key={g.id} value={g.id}>{g.name}</option>)}
           </select>
           <select className="fselect" value={year} onChange={(e) => { setYear(e.target.value); setPage(1); }}>
-            <option value="">All Years</option>
+            <option value="">{t('allYears')}</option>
             {YEARS.map((y) => <option key={y} value={y}>{y}</option>)}
           </select>
         </div>

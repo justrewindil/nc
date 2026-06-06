@@ -2,8 +2,10 @@ import { useRef } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import Card from './Card';
 import Reveal from './Reveal';
+import { useLanguage } from '../context/LanguageContext';
 
 export default function Row({ title, items, seeAll, renderItem }) {
+  const { t } = useLanguage();
   const scrollRef = useRef(null);
   const scrollBy = (dir) => {
     const sc = scrollRef.current;
@@ -15,7 +17,7 @@ export default function Row({ title, items, seeAll, renderItem }) {
       <div className="row-head">
         <span className="row-title"><i className="row-title-icon" />{title}</span>
         {seeAll && (
-          <button className="row-see-all" onClick={seeAll}>See All <ChevronRight size={13} /></button>
+          <button className="row-see-all" onClick={seeAll}>{t('seeAll')} <ChevronRight size={13} /></button>
         )}
       </div>
       <div className="row-wrap">

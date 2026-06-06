@@ -661,3 +661,36 @@ main{padding-top:var(--nav-h);min-height:100vh}
 .btn-google:disabled{opacity:.7;cursor:not-allowed}
 .auth-divider{display:flex;align-items:center;gap:12px;margin:18px 0;color:var(--muted2);font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.6px}
 .auth-divider::before,.auth-divider::after{content:'';flex:1;height:1px;background:var(--border2)}
+
+/* ── LANGUAGE TOGGLE ── */
+.lang-toggle{
+  display:flex;align-items:center;gap:5px;flex-shrink:0;
+  background:var(--glass);border:1px solid var(--glass-border);color:var(--text);
+  border-radius:8px;padding:7px 12px;font-size:13px;font-weight:600;transition:all .2s;
+}
+.lang-toggle:hover{background:rgba(229,9,20,.15);border-color:rgba(229,9,20,.4)}
+.auth-lang{position:absolute;top:20px;font-size:13px;font-weight:600;color:var(--muted);background:var(--glass);border:1px solid var(--glass-border);border-radius:8px;padding:6px 12px;transition:all .2s}
+.auth-lang:hover{color:#fff;border-color:rgba(229,9,20,.4)}
+
+/* ── HEBREW / RTL ── */
+body.lang-he{font-family:'Heebo','Inter',sans-serif;--font-display:'Heebo','Inter',sans-serif}
+body.lang-he input,body.lang-he select,body.lang-he button{font-family:'Heebo','Inter',sans-serif}
+[dir="rtl"] .hero-content,[dir="rtl"] .spot-inner{margin-left:0;margin-right:0}
+[dir="rtl"] #hero::after{
+  background:
+    linear-gradient(to left,rgba(8,5,6,.95) 0%,rgba(8,5,6,.5) 48%,rgba(8,5,6,.15) 100%),
+    linear-gradient(to top,var(--bg) 0%,rgba(8,5,6,.6) 24%,transparent 60%),
+    radial-gradient(130% 90% at 12% 25%,rgba(229,9,20,.2),transparent 55%),
+    radial-gradient(120% 120% at 50% 50%,transparent 55%,rgba(0,0,0,.55) 100%);
+}
+[dir="rtl"] .spotlight::after{background:linear-gradient(to left,rgba(8,5,6,.96) 0%,rgba(8,5,6,.6) 45%,rgba(8,5,6,.1) 100%),linear-gradient(to top,rgba(8,5,6,.9),transparent 60%)}
+[dir="rtl"] .hero-logo,[dir="rtl"] .spot-logo{transform-origin:right bottom}
+[dir="rtl"] .top10-card{padding-left:0;padding-right:54px}
+[dir="rtl"] .top10-rank{left:auto;right:-8px}
+[dir="rtl"] #toasts{right:auto;left:22px}
+[dir="rtl"] #btt{left:auto;right:22px}
+[dir="rtl"] .card-pill{left:auto;right:8px}
+[dir="rtl"] #searchDrop{right:auto;left:0}
+[dir="rtl"] #epPanel{right:auto;left:0;border-left:none;border-right:1px solid var(--glass-border);transform:translateX(-100%)}
+[dir="rtl"] #epPanel.on{transform:translateX(0)}
+@media(max-width:768px){[dir="rtl"] #searchDrop{left:-40px;right:auto}}

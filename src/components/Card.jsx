@@ -1,9 +1,11 @@
 import { Play, Plus, Check, Info } from 'lucide-react';
 import { IMG, typeOf, titleOf, yearOf } from '../lib/tmdb';
 import { useStore } from '../context/StoreContext';
+import { useLanguage } from '../context/LanguageContext';
 
 export default function Card({ item }) {
   const { openDetail, openPlayer, toggleWatchlist, isSaved } = useStore();
+  const { t } = useLanguage();
   const id = item.id;
   const type = typeOf(item);
   const title = titleOf(item);
@@ -27,7 +29,7 @@ export default function Card({ item }) {
             <span className="play-circle"><Play size={16} fill="#000" stroke="none" /></span>
           </button>
           <div className="ch-bar">
-            <button className="ch-btn primary" onClick={play}><Play size={13} fill="currentColor" stroke="none" /> Play</button>
+            <button className="ch-btn primary" onClick={play}><Play size={13} fill="currentColor" stroke="none" /> {t('play')}</button>
             <button className={`ch-btn icon ch-wl${saved ? ' saved' : ''}`} onClick={wl} title={saved ? 'Remove from Watchlist' : 'Add to Watchlist'}>
               {saved ? <Check size={14} /> : <Plus size={14} />}
             </button>
@@ -35,7 +37,7 @@ export default function Card({ item }) {
           </div>
         </div>
         <div className="card-top">
-          <span className="badge badge-hd">HD</span>
+          <span className="badge badge-hd">{t('hd')}</span>
           <button className={`card-wl-btn${saved ? ' saved' : ''}`} onClick={wl} title={saved ? 'Remove from Watchlist' : 'Add to Watchlist'}>
             {saved ? <Check size={12} /> : <Plus size={12} />}
           </button>
@@ -46,7 +48,7 @@ export default function Card({ item }) {
         <div className="card-title" title={title}>{title}</div>
         <div className="card-sub">
           <span className="card-year">{yr || '—'}</span>
-          <span className="card-typetag">{type === 'tv' ? 'TV' : 'Movie'}</span>
+          <span className="card-typetag">{type === 'tv' ? t('tvShow') : t('movie')}</span>
         </div>
       </div>
     </div>

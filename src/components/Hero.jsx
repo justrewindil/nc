@@ -2,9 +2,11 @@ import { useEffect, useRef, useState } from 'react';
 import { Play, Info, Star } from 'lucide-react';
 import { IMG, getImages, pickLogo, typeOf, titleOf, yearOf } from '../lib/tmdb';
 import { useStore } from '../context/StoreContext';
+import { useLanguage } from '../context/LanguageContext';
 
 export default function Hero({ items }) {
   const { openPlayer, openDetail } = useStore();
+  const { t } = useLanguage();
   const [idx, setIdx] = useState(0);
   const [logo, setLogo] = useState(null);
   const layerA = useRef(null);
@@ -80,20 +82,20 @@ export default function Hero({ items }) {
         <div className="hero-bg" ref={layerB} />
       </div>
       <div className="hero-content">
-        <div className="hero-tag"><Star size={10} fill="currentColor" stroke="none" /> Trending</div>
+        <div className="hero-tag"><Star size={10} fill="currentColor" stroke="none" /> {t('trendingTag')}</div>
         {logo
           ? <img className="hero-logo" src={`${IMG}/w500${logo.file_path}`} alt={title} />
           : <h1 className="hero-title">{title}</h1>}
         <div className="hero-chips">
           <span className="chip gold">★ {rt}</span>
           {yr && <span className="chip">{yr}</span>}
-          <span className="chip">{type === 'tv' ? 'TV Show' : 'Movie'}</span>
-          <span className="chip green">HD</span>
+          <span className="chip">{type === 'tv' ? t('tvShow') : t('movie')}</span>
+          <span className="chip green">{t('hd')}</span>
         </div>
         <p className="hero-overview">{cur.overview}</p>
         <div className="hero-btns">
-          <button className="btn-play" onClick={() => openPlayer(cur.id, type)}><Play size={16} fill="#fff" stroke="none" /> Watch Now</button>
-          <button className="btn-info" onClick={() => openDetail(cur.id, type)}><Info size={16} /> More Info</button>
+          <button className="btn-play" onClick={() => openPlayer(cur.id, type)}><Play size={16} fill="#fff" stroke="none" /> {t('watchNow')}</button>
+          <button className="btn-info" onClick={() => openDetail(cur.id, type)}><Info size={16} /> {t('moreInfo')}</button>
         </div>
       </div>
       <div className="hero-dots">

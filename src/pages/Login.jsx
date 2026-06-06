@@ -2,10 +2,12 @@ import { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Mail, Lock, AlertCircle } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { useLanguage } from '../context/LanguageContext';
 import GoogleButton from '../components/GoogleButton';
 
 export default function Login() {
   const { signIn, ready } = useAuth();
+  const { t, lang, toggle } = useLanguage();
   const navigate = useNavigate();
   const location = useLocation();
   const [email, setEmail] = useState('');
@@ -25,10 +27,11 @@ export default function Login() {
 
   return (
     <div className="auth-wrap">
+      <button className="auth-lang" style={lang === 'he' ? { left: 20 } : { right: 20 }} onClick={toggle}>{lang === 'he' ? 'EN' : 'עברית'}</button>
       <form className="auth-card" onSubmit={submit}>
         <div className="auth-logo"><img src="/logo.png" alt="JustFilmzz" /></div>
-        <h1>Welcome back</h1>
-        <p className="sub">Sign in to continue to JustFilmzz</p>
+        <h1>{t('welcomeBack')}</h1>
+        <p className="sub">{t('signinSub')}</p>
 
         {!ready && (
           <div className="auth-config-warn">
@@ -37,18 +40,18 @@ export default function Login() {
         )}
         {error && <div className="auth-error"><AlertCircle size={15} /> {error}</div>}
 
-        <GoogleButton label="Sign in with Google" />
-        <div className="auth-divider"><span>or</span></div>
+        <GoogleButton label={t('googleSignin')} />
+        <div className="auth-divider"><span>{t('or')}</span></div>
 
         <div className="field">
-          <label>Email</label>
+          <label>{t('emailLabel')}</label>
           <div className="field-wrap">
             <Mail size={16} />
             <input type="email" required placeholder="you@example.com" value={email} onChange={(e) => setEmail(e.target.value)} />
           </div>
         </div>
         <div className="field">
-          <label>Password</label>
+          <label>{t('passwordLabel')}</label>
           <div className="field-wrap">
             <Lock size={16} />
             <input type="password" required placeholder="••••••••" value={password} onChange={(e) => setPassword(e.target.value)} />
@@ -56,10 +59,10 @@ export default function Login() {
         </div>
 
         <button className="auth-btn" type="submit" disabled={busy}>
-          {busy ? <><span className="auth-mini-spin" /> Signing in…</> : 'Sign In'}
+          {busy ? <><span className="auth-mini-spin" /> {t('signingIn')}</> : t('signIn')}
         </button>
 
-        <p className="auth-switch">Don't have an account? <Link to="/signup">Sign up</Link></p>
+        <p className="auth-switch">{t('noAccount')} <Link to="/signup">{t('signupLink')}</Link></p>
       </form>
     </div>
   );

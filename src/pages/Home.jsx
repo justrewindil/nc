@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { tmdb } from '../lib/tmdb';
 import { useStore } from '../context/StoreContext';
+import { useLanguage } from '../context/LanguageContext';
 import Hero from '../components/Hero';
 import Row from '../components/Row';
 import Top10Row from '../components/Top10Row';
@@ -12,6 +13,7 @@ import CwCard from '../components/CwCard';
 export default function Home() {
   const navigate = useNavigate();
   const { continueWatching } = useStore();
+  const { t, lang } = useLanguage();
   const [data, setData] = useState(null);
   const [genres, setGenres] = useState([]);
 
@@ -35,7 +37,7 @@ export default function Home() {
       setData({ trend, popM, popTv, topM, topTv, action, comedy, drama, scifi });
     }).catch(() => {});
     return () => { alive = false; };
-  }, []);
+  }, [lang]);
 
   if (!data) {
     return (
@@ -56,20 +58,20 @@ export default function Home() {
       <Hero items={heroItems} />
       <div className="home-rows">
         {continueWatching.length > 0 && (
-          <Row title="Continue Watching" items={continueWatching} renderItem={(it) => <CwCard key={`${it.id}-${it.type}`} item={it} />} />
+          <Row title={t('continueWatching')} items={continueWatching} renderItem={(it) => <CwCard key={`${it.id}-${it.type}`} item={it} />} />
         )}
-        <Row title="Trending This Week" items={trend.results.slice(0, 16)} />
-        <Top10Row title="Top 10 Today" items={trend.results} />
-        <Row title="Popular Movies" items={popM.results.slice(0, 16).map((i) => ({ ...i, media_type: 'movie' }))} seeAll={() => navigate('/movies')} />
-        <Row title="Popular TV Shows" items={popTv.results.slice(0, 16).map((i) => ({ ...i, media_type: 'tv' }))} seeAll={() => navigate('/tv')} />
+        <Row title={t('trending')} items={trend.results.slice(0, 16)} />
+        <Top10Row title={t('top10')} items={trend.results} />
+        <Row title={t('popularMovies')} items={popM.results.slice(0, 16).map((i) => ({ ...i, media_type: 'movie' }))} seeAll={() => navigate('/movies')} />
+        <Row title={t('popularTv')} items={popTv.results.slice(0, 16).map((i) => ({ ...i, media_type: 'tv' }))} seeAll={() => navigate('/tv')} />
         <Spotlight item={featured ? { ...featured, media_type: 'movie' } : null} />
         <GenreTiles genres={genres} />
-        <Row title="Top Rated Movies" items={topM.results.slice(0, 16).map((i) => ({ ...i, media_type: 'movie' }))} />
-        <Row title="Top Rated TV Shows" items={topTv.results.slice(0, 16).map((i) => ({ ...i, media_type: 'tv' }))} />
-        <Row title="Action & Adventure" items={action.results.slice(0, 16).map((i) => ({ ...i, media_type: 'movie' }))} />
-        <Row title="Comedy" items={comedy.results.slice(0, 16).map((i) => ({ ...i, media_type: 'movie' }))} />
-        <Row title="Drama Series" items={drama.results.slice(0, 16).map((i) => ({ ...i, media_type: 'tv' }))} />
-        <Row title="Sci-Fi" items={scifi.results.slice(0, 16).map((i) => ({ ...i, media_type: 'movie' }))} />
+        <Row title={t('topRatedMovies')} items={topM.results.slice(0, 16).map((i) => ({ ...i, media_type: 'movie' }))} />
+        <Row title={t('topRatedTv')} items={topTv.results.slice(0, 16).map((i) => ({ ...i, media_type: 'tv' }))} />
+        <Row title={t('action')} items={action.results.slice(0, 16).map((i) => ({ ...i, media_type: 'movie' }))} />
+        <Row title={t('comedy')} items={comedy.results.slice(0, 16).map((i) => ({ ...i, media_type: 'movie' }))} />
+        <Row title={t('dramaSeries')} items={drama.results.slice(0, 16).map((i) => ({ ...i, media_type: 'tv' }))} />
+        <Row title={t('scifi')} items={scifi.results.slice(0, 16).map((i) => ({ ...i, media_type: 'movie' }))} />
       </div>
     </div>
   );

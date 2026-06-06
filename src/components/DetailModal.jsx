@@ -2,10 +2,12 @@ import { useEffect, useState } from 'react';
 import { X, Play, Video, Plus, Check, Star } from 'lucide-react';
 import { tmdb, IMG, titleOf, yearOf } from '../lib/tmdb';
 import { useStore } from '../context/StoreContext';
+import { useLanguage } from '../context/LanguageContext';
 import Card from './Card';
 
 export default function DetailModal() {
   const { detail, closeDetail, openPlayer, openTrailer, toggleWatchlist, isSaved } = useStore();
+  const { t, lang } = useLanguage();
   const [data, setData] = useState(null);
 
   useEffect(() => {
@@ -24,7 +26,7 @@ export default function DetailModal() {
       setData({ det, creds, vids, sim });
     }).catch(() => {});
     return () => { alive = false; document.body.style.overflow = ''; };
-  }, [detail]);
+  }, [detail, lang]);
 
   const onOverlay = (e) => { if (e.target.id === 'detailOverlay') closeDetail(); };
 
@@ -54,23 +56,23 @@ export default function DetailModal() {
               <span className="chip gold">★ {rt}</span>
               {yr && <span className="chip">{yr}</span>}
               {runtime && <span className="chip">{runtime}</span>}
-              {det.vote_count ? <span className="chip">{det.vote_count.toLocaleString()} votes</span> : null}
-              {type === 'tv' && det.number_of_seasons ? <span className="chip">{det.number_of_seasons} seasons</span> : null}
-              {type === 'tv' && det.number_of_episodes ? <span className="chip">{det.number_of_episodes} eps</span> : null}
+              {det.vote_count ? <span className="chip">{det.vote_count.toLocaleString()} {t('votes')}</span> : null}
+              {type === 'tv' && det.number_of_seasons ? <span className="chip">{det.number_of_seasons} {t('seasons')}</span> : null}
+              {type === 'tv' && det.number_of_episodes ? <span className="chip">{det.number_of_episodes} {t('eps')}</span> : null}
               {det.status && <span className="chip green">{det.status}</span>}
             </div>
             {genres.length > 0 && <div className="detail-genres">{genres.map((g) => <span key={g.id} className="gtag">{g.name}</span>)}</div>}
             {det.overview && <p className="detail-overview">{det.overview}</p>}
             <div className="detail-actions">
-              <button className="btn-accent" onClick={() => openPlayer(id, type)}><Play size={15} fill="#fff" stroke="none" /> Watch Now</button>
-              {trailer && <button className="btn-ghost" onClick={() => openTrailer(trailer.key)}><Video size={14} /> Trailer</button>}
+              <button className="btn-accent" onClick={() => openPlayer(id, type)}><Play size={15} fill="#fff" stroke="none" /> {t('watchNow')}</button>
+              {trailer && <button className="btn-ghost" onClick={() => openTrailer(trailer.key)}><Video size={14} /> {t('trailer')}</button>}
               <button className="btn-ghost" onClick={() => toggleWatchlist({ id, type, title, poster: det.poster_path || '' })}>
-                {saved ? <><Check size={14} /> Saved</> : <><Plus size={14} /> Watchlist</>}
+                {saved ? <><Check size={14} /> {t('saved')}</> : <><Plus size={14} /> {t('watchlistBtn')}</>}
               </button>
             </div>
             {cast.length > 0 && (
               <div className="detail-section">
-                <div className="detail-section-title">Cast</div>
+                <div className="detail-section-title">{t('cast')}</div>
                 <div className="cast-row">
                   {cast.map((p) => (
                     <div className="cast-item" key={p.id}>
@@ -84,7 +86,7 @@ export default function DetailModal() {
             )}
             {sim.results?.length > 0 && (
               <div className="detail-section">
-                <div className="detail-section-title">You May Also Like</div>
+                <div className="detail-section-title">{t('youMayLike')}</div>
                 <div className="similar-row">
                   {sim.results.slice(0, 10).map((r) => <Card key={r.id} item={{ ...r, media_type: type }} />)}
                 </div>

@@ -1,6 +1,7 @@
 import { HashRouter, Routes, Route, Navigate, Outlet, useLocation } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { StoreProvider } from './context/StoreContext';
+import { LanguageProvider } from './context/LanguageContext';
 import Nav from './components/Nav';
 import MobileNav from './components/MobileNav';
 import DetailModal from './components/DetailModal';
@@ -50,6 +51,7 @@ function AppShell() {
 
 export default function App() {
   return (
+    <LanguageProvider>
     <AuthProvider>
       <div id="grain" />
       <HashRouter>
@@ -69,5 +71,6 @@ export default function App() {
         </Routes>
       </HashRouter>
     </AuthProvider>
+    </LanguageProvider>
   );
 }

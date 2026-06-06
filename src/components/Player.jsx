@@ -2,9 +2,11 @@ import { useEffect, useRef, useState } from 'react';
 import { ArrowLeft, X, ChevronLeft, ChevronRight, ListVideo, Info } from 'lucide-react';
 import { tmdb, IMG, SOURCES, titleOf, yearOf, fmtDate } from '../lib/tmdb';
 import { useStore } from '../context/StoreContext';
+import { useLanguage } from '../context/LanguageContext';
 
 export default function Player() {
   const { player, closePlayer, saveCw, updateCw, getCw } = useStore();
+  const { t } = useLanguage();
 
   const [meta, setMeta] = useState({ title: '', sub: '', thumb: '' });
   const [seasons, setSeasons] = useState([]);
@@ -140,14 +142,14 @@ export default function Player() {
           <span className="player-bar-title">{meta.title}</span>
           <span className="player-bar-sub">{meta.sub}</span>
         </div>
-        <button className="player-close-btn" onClick={closePlayer}><X size={12} /> Exit</button>
+        <button className="player-close-btn" onClick={closePlayer}><X size={12} /> {t('exit')}</button>
       </div>
 
       <div className="player-frame">
         <div className={`player-loader${loaderHidden ? ' hide' : ''}`}>
           <div className="spin" />
-          <p>Loading stream…</p>
-          <span>If the screen stays black, switch servers below</span>
+          <p>{t('loading')}</p>
+          <span>{t('loadingHint')}</span>
         </div>
         <iframe
           title="player"
@@ -159,13 +161,13 @@ export default function Player() {
         {isTV && (
           <div id="epPanel" className={panelOpen ? 'on' : ''}>
             <div className="epp-head">
-              <h3>Episodes</h3>
+              <h3>{t('episodes')}</h3>
               <button className="epp-close" onClick={() => setPanelOpen(false)}><X size={14} /></button>
             </div>
             <select className="epp-season" value={season} onChange={(e) => changeSeason(e.target.value)}>
               {seasons.map((s) => (
                 <option key={s.season_number} value={s.season_number}>
-                  Season {s.season_number}{s.episode_count ? ` · ${s.episode_count} episodes` : ''}
+                  {t('season')} {s.season_number}{s.episode_count ? ` · ${s.episode_count} ${t('episodes')}` : ''}
                 </option>
               ))}
             </select>
@@ -178,11 +180,11 @@ export default function Player() {
                     <div className="epp-thumb">
                       {still && <img src={still} loading="lazy" alt="" />}
                       <span className="epnum">E{e.episode_number}</span>
-                      {on && <span className="epp-nowplay">PLAYING</span>}
+                      {on && <span className="epp-nowplay">{t('playing')}</span>}
                     </div>
                     <div className="epp-meta">
-                      <div className="epp-title">{e.episode_number}. {e.name || `Episode ${e.episode_number}`}</div>
-                      <div className="epp-ov">{e.overview || 'No description available.'}</div>
+                      <div className="epp-title">{e.episode_number}. {e.name || `${t('episodes')} ${e.episode_number}`}</div>
+                      <div className="epp-ov">{e.overview || t('noDesc')}</div>
                       <div className="epp-sub">{[e.air_date && fmtDate(e.air_date), e.runtime && `${e.runtime}m`, e.vote_average ? `★ ${e.vote_average.toFixed(1)}` : ''].filter(Boolean).join(' · ')}</div>
                     </div>
                   </div>
@@ -197,16 +199,16 @@ export default function Player() {
         <div className="player-bottom">
           {isTV ? (
             <div className="pl-ctrls">
-              <button className="pl-btn" onClick={prevEp} disabled={ep <= 1}><ChevronLeft size={13} /> Prev</button>
+              <button className="pl-btn" onClick={prevEp} disabled={ep <= 1}><ChevronLeft size={13} /> {t('prev')}</button>
               <span className="pl-eplabel">S{season} · E{ep}{curEp?.name ? ` · ${curEp.name}` : ''}</span>
-              <button className="pl-btn" onClick={nextEp} disabled={ep >= episodes.length}>Next <ChevronRight size={13} /></button>
-              <button className="pl-btn accent" onClick={() => setPanelOpen((o) => !o)}><ListVideo size={13} /> Episodes</button>
+              <button className="pl-btn" onClick={nextEp} disabled={ep >= episodes.length}>{t('next')} <ChevronRight size={13} /></button>
+              <button className="pl-btn accent" onClick={() => setPanelOpen((o) => !o)}><ListVideo size={13} /> {t('episodes')}</button>
             </div>
           ) : (
-            <div className="player-hint"><Info size={14} /> Not playing? Switch servers →</div>
+            <div className="player-hint"><Info size={14} /> {t('notPlaying')} →</div>
           )}
           <div className="server-group">
-            <span className="server-label">Servers</span>
+            <span className="server-label">{t('servers')}</span>
             {SOURCES.map((s, i) => (
               <button key={s.name} className={`server-btn${i === source ? ' on' : ''}`} onClick={() => switchSrc(i)}>
                 <span className="dot" />{s.name}

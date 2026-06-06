@@ -3,8 +3,10 @@ import { useSearchParams } from 'react-router-dom';
 import { tmdb } from '../lib/tmdb';
 import Card from '../components/Card';
 import Pagination from '../components/Pagination';
+import { useLanguage } from '../context/LanguageContext';
 
 export default function SearchPage() {
+  const { t, lang } = useLanguage();
   const [params] = useSearchParams();
   const q = params.get('q') || '';
   const [page, setPage] = useState(1);
@@ -23,20 +25,20 @@ export default function SearchPage() {
       setData(d); setLoading(false); window.scrollTo(0, 0);
     }).catch(() => setLoading(false));
     return () => { alive = false; };
-  }, [q, page]);
+  }, [q, page, lang]);
 
   return (
     <div className="search-page page-in">
       <div className="search-info">
         <h2>"{q}"</h2>
-        <p>{data ? `${data.total_results.toLocaleString()} results` : 'Searching…'}</p>
+        <p>{data ? `${data.total_results.toLocaleString()} ${t('results')}` : t('searching')}</p>
       </div>
       <div className="browse-grid">
         {loading
           ? Array.from({ length: 12 }).map((_, i) => <div key={i} className="skel skel-card-g" />)
           : (data?.results?.length
             ? data.results.map((it) => <Card key={`${it.id}-${it.media_type}`} item={it} />)
-            : <div className="no-results">No results found.</div>)}
+            : <div className="no-results">{t('noResults')}</div>)}
       </div>
       {data && <Pagination total={data.total_pages} current={page} onChange={setPage} />}
     </div>

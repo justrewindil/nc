@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
+import { useLanguage } from '../context/LanguageContext';
 
 const GoogleIcon = () => (
   <svg width="18" height="18" viewBox="0 0 48 48" aria-hidden>
@@ -12,6 +13,7 @@ const GoogleIcon = () => (
 
 export default function GoogleButton({ label = 'Continue with Google' }) {
   const { signInWithGoogle } = useAuth();
+  const { t } = useLanguage();
   const [busy, setBusy] = useState(false);
   const onClick = async () => {
     setBusy(true);
@@ -21,7 +23,7 @@ export default function GoogleButton({ label = 'Continue with Google' }) {
   return (
     <button type="button" className="btn-google" onClick={onClick} disabled={busy}>
       {busy ? <span className="auth-mini-spin" style={{ borderTopColor: '#000' }} /> : <GoogleIcon />}
-      {busy ? 'Redirecting…' : label}
+      {busy ? t('redirecting') : label}
     </button>
   );
 }

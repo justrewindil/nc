@@ -6,11 +6,17 @@ const KEY = import.meta.env.VITE_TMDB_KEY || '';
 // v4 Read Access Token is a JWT (contains dots); v3 key is 32 hex chars.
 const IS_V4 = KEY.includes('.');
 
+// Current TMDB content language — initialized from stored preference so the
+// very first fetch is already correct, then updated by LanguageContext.
+let currentLang = (typeof localStorage !== 'undefined' && localStorage.getItem('jfz_lang') === 'he') ? 'he-IL' : 'en-US';
+export function setTmdbLang(l) { currentLang = l || 'en-US'; }
+
 export async function tmdb(path, params = {}) {
   const u = new URL(BASE + path);
   for (const [k, v] of Object.entries(params)) {
     if (v !== undefined && v !== '' && v !== null) u.searchParams.set(k, v);
   }
+  if (!u.searchParams.has('language')) u.searchParams.set('language', currentLang);
   let opts;
   if (IS_V4) {
     opts = { headers: { Authorization: `Bearer ${KEY}`, accept: 'application/json' } };
