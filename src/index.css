@@ -764,6 +764,12 @@ main{padding-top:var(--nav-h);min-height:100vh}
 .cards-earn{font-size:13px;color:var(--green);background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.25);padding:7px 12px;border-radius:8px;margin-left:auto}
 
 /* pack picker */
+.pack-search{display:flex;align-items:center;gap:10px;background:var(--glass);border:1px solid var(--glass-border);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border-radius:12px;padding:11px 16px;margin-bottom:20px;max-width:520px}
+.pack-search svg{color:var(--muted2);flex-shrink:0}
+.pack-search input{flex:1;background:none;border:none;outline:none;color:var(--text);font-size:14px}
+.pack-search input::placeholder{color:var(--muted2)}
+.pack-search button{background:none;border:none;color:var(--muted2);display:flex;transition:color .2s}
+.pack-search button:hover{color:var(--accent)}
 .pack-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:16px}
 .pack-pick{background:var(--glass);border:1px solid var(--glass-border);border-radius:12px;overflow:hidden}
 .pack-pick img{width:100%;aspect-ratio:2/3;object-fit:cover}

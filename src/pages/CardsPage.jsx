@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
-import { Coins, Package, Layers } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
+import { Coins, Package, Layers, Search, X } from 'lucide-react';
 import { tmdb, IMG, typeOf, titleOf } from '../lib/tmdb';
 import { PACK_COST, RARITIES, RARITY_ORDER, COINS_PER_MIN } from '../lib/cards';
 import { useStore } from '../context/StoreContext';
@@ -10,6 +10,22 @@ export default function CardsPage() {
   const { t, lang } = useLanguage();
   const [titles, setTitles] = useState([]);
   const [filter, setFilter] = useState('');
+  const [q, setQ] = useState('');
+  const [results, setResults] = useState(null); // null = show curated list
+  const searchTimer = useRef(null);
+
+  // search any movie/show to open a pack from
+  const onSearch = (val) => {
+    setQ(val);
+    clearTimeout(searchTimer.current);
+    if (!val.trim()) { setResults(null); return; }
+    searchTimer.current = setTimeout(async () => {
+      try {
+        const d = await tmdb('/search/multi', { query: val.trim(), page: 1 });
+        setResults((d.results || []).filter((r) => r.media_type !== 'person' && r.poster_path));
+      } catch { setResults([]); }
+    }, 350);
+  };
 
   // big mixed pool of movies + TV to open packs from
   useEffect(() => {
@@ -63,9 +79,14 @@ export default function CardsPage() {
         <h2 className="browse-title" style={{ marginBottom: 6 }}>
           <Package size={22} style={{ verticalAlign: '-4px', marginRight: 8 }} />{t('openPack')}
         </h2>
-        <p style={{ color: 'var(--muted)', fontSize: 14, marginBottom: 20 }}>{t('packHint')} · {PACK_COST} 🪙</p>
+        <p style={{ color: 'var(--muted)', fontSize: 14, marginBottom: 16 }}>{t('packHint')} · {PACK_COST} 🪙</p>
+        <div className="pack-search">
+          <Search size={16} />
+          <input value={q} placeholder={t('packSearch')} onChange={(e) => onSearch(e.target.value)} />
+          {q && <button onClick={() => onSearch('')} aria-label="clear"><X size={16} /></button>}
+        </div>
         <div className="pack-grid">
-          {titles.map((it) => {
+          {(results !== null ? results : titles).map((it) => {
             const type = typeOf(it);
             return (
               <div key={`${type}-${it.id}`} className="pack-pick">
@@ -81,6 +102,9 @@ export default function CardsPage() {
             );
           })}
         </div>
+        {results !== null && results.length === 0 && (
+          <div className="no-results" style={{ padding: '30px 0' }}>{t('noResults')}</div>
+        )}
       </div>
 
       <div className="browse-wrap" style={{ paddingTop: 8 }}>
