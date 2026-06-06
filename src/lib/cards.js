@@ -25,6 +25,20 @@ export function rarityFor(popularity = 0, order = 99) {
   return TIERS[Math.min(3, idx)];
 }
 
+// rarity for a "moment" card from its rating (high-rated episodes = rarer moments)
+export function rarityForVote(v = 0) {
+  return v >= 8.5 ? 'legendary' : v >= 8 ? 'epic' : v >= 7 ? 'rare' : 'common';
+}
+// rarity by rank (best scene first → rarest)
+export function rarityByRank(i) {
+  return i === 0 ? 'legendary' : i <= 2 ? 'epic' : i <= 5 ? 'rare' : 'common';
+}
+export function shuffle(a) {
+  const x = [...a];
+  for (let i = x.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [x[i], x[j]] = [x[j], x[i]]; }
+  return x;
+}
+
 // build a pack: 5 distinct actors from a title, each as a role card tied to that title
 export function buildPack(cast, mediaId, mediaTitle, size = PACK_SIZE) {
   const pool = (cast || []).filter((c) => c.id && c.name).slice(0, 20);
@@ -38,6 +52,7 @@ export function buildPack(cast, mediaId, mediaTitle, size = PACK_SIZE) {
     used.add(c.id);
     picked.push({
       key: `${c.id}-${mediaId}`,                 // actor + this title = one collectible role card
+      kind: 'role',
       actorId: c.id,
       name: c.name,
       character: c.character || '',

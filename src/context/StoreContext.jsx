@@ -8,7 +8,7 @@ import {
 } from '../lib/storage';
 import * as db from '../lib/db';
 import { tmdb } from '../lib/tmdb';
-import { PACK_COST, COINS_PER_MIN, DAILY_EARN_CAP, RARITIES, buildPack } from '../lib/cards';
+import { PACK_COST, PACK_SIZE, COINS_PER_MIN, DAILY_EARN_CAP, RARITIES, buildPack, rarityForVote, rarityByRank, shuffle } from '../lib/cards';
 
 const StoreContext = createContext(null);
 export const useStore = () => useContext(StoreContext);
@@ -168,8 +168,40 @@ export function StoreProvider({ children }) {
     if (wallet.coins < PACK_COST) { toast('Not enough coins', 'err'); return; }
     setPackBusy(true);
     try {
+      const mid = Number(id);
+      // ── moment cards (scene / episode stills) ──
+      let moments = [];
+      try {
+        if (type === 'tv') {
+          const det = await tmdb(`/tv/${id}`);
+          const seasons = (det.seasons || []).filter((s) => s.season_number > 0 && s.episode_count > 0);
+          if (seasons.length) {
+            const season = seasons[Math.floor(Math.random() * seasons.length)];
+            const sdata = await tmdb(`/tv/${id}/season/${season.season_number}`);
+            const eps = (sdata.episodes || []).filter((e) => e.still_path);
+            moments = shuffle(eps).slice(0, 2).map((e) => ({
+              key: `m-${mid}-s${season.season_number}e${e.episode_number}`, kind: 'moment', actorId: 0,
+              name: `S${season.season_number}E${e.episode_number}: ${e.name || ''}`.trim(),
+              character: '', profile: e.still_path || '', rarity: rarityForVote(e.vote_average),
+              mediaId: mid, mediaTitle: titleName,
+            }));
+          }
+        } else {
+          const imgs = await tmdb(`/movie/${id}/images`);
+          let backs = (imgs.backdrops || []).filter((b) => b.file_path).slice(0, 15);
+          backs.sort((a, b) => (b.vote_average || 0) - (a.vote_average || 0));
+          const ranked = backs.map((b, i) => ({ b, rarity: rarityByRank(i) }));
+          moments = shuffle(ranked).slice(0, 2).map(({ b, rarity }) => ({
+            key: `m-${mid}-${(b.file_path || '').replace(/[^a-z0-9]/gi, '').slice(0, 14)}`, kind: 'moment', actorId: 0,
+            name: `${titleName} — Scene`, character: '', profile: b.file_path || '', rarity,
+            mediaId: mid, mediaTitle: titleName,
+          }));
+        }
+      } catch {}
+      // ── role cards (fill the rest of the pack) ──
       const credits = await tmdb(`/${type}/${id}/credits`);
-      const pulled = buildPack(credits.cast || [], Number(id), titleName);
+      const roles = buildPack(credits.cast || [], mid, titleName).slice(0, PACK_SIZE - moments.length);
+      const pulled = shuffle([...roles, ...moments]);
       if (!pulled.length) { toast('No cards available for this title', 'err'); setPackBusy(false); return; }
       let refund = 0;
       const result = [];

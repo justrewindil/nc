@@ -73,7 +73,8 @@ create table if not exists public.wallets (
 -- CARD GAME: OWNED CARDS (actor-in-a-role; one actor can have many cards)
 create table if not exists public.cards (
   user_id     uuid not null references auth.users on delete cascade,
-  card_id     text not null,          -- "<actorId>-<mediaId>"
+  card_id     text not null,          -- "<actorId>-<mediaId>" or "m-<mediaId>-<still>"
+  kind        text default 'role',    -- 'role' | 'moment'
   actor_id    integer not null,
   name        text,
   character   text,

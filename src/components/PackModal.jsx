@@ -23,13 +23,15 @@ export default function PackModal() {
                 <div className="gcard-img">
                   {c.profile
                     ? <img src={`${IMG}/w342${c.profile}`} alt={c.name} />
-                    : <div className="gcard-noimg">{c.name[0]}</div>}
+                    : <div className="gcard-noimg">{(c.name || '?')[0]}</div>}
                   <span className="gcard-rarity">{r.label}</span>
+                  {c.kind === 'moment' && <span className="gcard-moment">🎬 {t('moment')}</span>}
                   {c.isNew ? <span className="gcard-new">NEW</span> : <span className="gcard-dupe">+{r.shard}🪙</span>}
                 </div>
                 <div className="gcard-name">
-                  <span className="gcard-char">{c.character || c.name}</span>
-                  {c.character ? <span className="gcard-actor">{c.name}</span> : null}
+                  {c.kind === 'moment'
+                    ? <><span className="gcard-char">{c.name}</span><span className="gcard-from">{c.mediaTitle}</span></>
+                    : <><span className="gcard-char">{c.character || c.name}</span>{c.character ? <span className="gcard-actor">{c.name}</span> : null}</>}
                 </div>
               </div>
             );

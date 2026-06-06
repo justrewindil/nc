@@ -126,13 +126,14 @@ export default function CardsPage() {
               return (
                 <div key={c.key} className={`gcard r-${c.rarity}`} style={{ '--rc': r.color }}>
                   <div className="gcard-img">
-                    {c.profile ? <img src={`${IMG}/w342${c.profile}`} alt={c.name} loading="lazy" /> : <div className="gcard-noimg">{c.name[0]}</div>}
+                    {c.profile ? <img src={`${IMG}/w342${c.profile}`} alt={c.name} loading="lazy" /> : <div className="gcard-noimg">{(c.name || '?')[0]}</div>}
                     <span className="gcard-rarity">{r.label}</span>
+                    {c.kind === 'moment' && <span className="gcard-moment">🎬 {t('moment')}</span>}
                     {c.count > 1 && <span className="gcard-count">×{c.count}</span>}
                   </div>
                   <div className="gcard-name">
-                    <span className="gcard-char">{c.character || c.name}</span>
-                    {c.character ? <span className="gcard-actor">{c.name}</span> : null}
+                    <span className="gcard-char">{c.kind === 'moment' ? c.name : (c.character || c.name)}</span>
+                    {c.kind !== 'moment' && c.character ? <span className="gcard-actor">{c.name}</span> : null}
                     {c.mediaTitle ? <span className="gcard-from">{c.mediaTitle}</span> : null}
                   </div>
                 </div>
