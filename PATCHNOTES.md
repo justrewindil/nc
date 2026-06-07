@@ -1,4 +1,65 @@
 ════════════════════════════════════════════════════════════
+                 JUSTFILMZZ — UPDATE v4.0
+                   "The Card Game"
+════════════════════════════════════════════════════════════
+
+[Added] Added The Collectible Card Game!
+
+[-] Earn Coins By Watching — +5 Coins Per Minute (Up To 600/Day)
+[-] Your Coin Balance Shows In The Navbar
+[-] Spend Coins To Open Packs (100 🪙 Each)
+[-] New "Cards" Page With Your Coins, Stats & Collection
+
+[Added] Added Actor & Role Cards!
+
+[-] Cards Are Actor-In-A-Role (Many Cards Per Actor)
+[-] Lead Roles Are Rarer — Common / Rare / Epic / Legendary
+[-] Cards Show The Actor's Photo, Character & Title
+[-] Duplicates Auto-Refund Coins
+
+[Added] Added Moment Cards (Rare Scenes & Episodes)!
+
+[-] TV: Real Episode Stills — High-Rated Episodes = Legendary Moments
+[-] Movies: Real Scene Images — Best Scene = Rarest
+[-] Marked With A 🎬 Moment Badge
+
+[Added] Added Pack Odds Preview!
+
+[-] See Rarity Percentages BEFORE You Open A Pack
+[-] See Every Card You Can Win — With Photos & Rarity
+[-] Open Right From The Preview
+
+[Added] Added Click-To-View Cards!
+
+[-] Click Any Card To See It Full-Size
+[-] Watch The Scene Or Episode That Card Is From
+[-] TV Moments Jump Straight To That Episode
+
+[Added] Added Pack Search!
+
+[-] Search Any Movie Or Show To Open A Pack From It
+[-] 40+ Curated Titles Mixed From Movies & TV
+
+------------------------------------------------------------
+
+[Improved] Improved Genre Tiles
+
+[-] Now Show Real Backdrop Images Per Genre With Gradient
+
+------------------------------------------------------------
+
+[Fixed] Fixed Streaming Servers
+
+[-] Replaced Dead Providers, Default To A Working Server
+[-] Auto-Fallback If A Server Fails To Load
+[-] Auto-Play Next Episode When One Ends
+
+------------------------------------------------------------
+
+[Wiped] Wiped The Plain Actor Headshot Cards (Now Full Photo Cards)
+
+
+════════════════════════════════════════════════════════════
                  JUSTFILMZZ — UPDATE v3.0
 ════════════════════════════════════════════════════════════
 
